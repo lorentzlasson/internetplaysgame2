@@ -6,6 +6,7 @@ type State = {
   score: number
   avatar: Position
   coin: Position
+  bomb: Position
 }
 
 const DIRECTIONS = ['up', 'down', 'left', 'right'] as const
@@ -30,6 +31,7 @@ const state: State = {
   score: 0,
   avatar: [0, 2],
   coin: [2, 0],
+  bomb: [0, 1],
 }
 
 const positionIsAllowed = ([x, y]: Position): boolean =>
@@ -38,14 +40,31 @@ const positionIsAllowed = ([x, y]: Position): boolean =>
 const positionIsCoin = ([x, y]: Position): boolean =>
   x === state.coin[0] && y === state.coin[1]
 
+const positionIsBomb = ([x, y]: Position): boolean =>
+  x === state.bomb[0] && y === state.bomb[1]
+
+const randomCapped = (cap: number) => Math.floor(Math.random() * cap)
+const randomPosition = (): Position => [
+  randomCapped(state.width),
+  randomCapped(state.height),
+]
+
 const respawnCoin = () => {
-  const r = () => Math.round(Math.random() * 2)
-  state.coin = [r(), r()]
+  state.coin = randomPosition()
+}
+
+const respawnBomb = () => {
+  state.bomb = randomPosition()
 }
 
 const collectCoin = () => {
   state.score++
   respawnCoin()
+}
+
+const blowUpBomb = () => {
+  state.score = 0
+  respawnBomb()
 }
 
 export const move = (direction: Direction): State => {
@@ -61,6 +80,10 @@ export const move = (direction: Direction): State => {
 
   if (positionIsCoin(newPos)) {
     collectCoin()
+  }
+
+  if (positionIsBomb(newPos)) {
+    blowUpBomb()
   }
 
   return state
