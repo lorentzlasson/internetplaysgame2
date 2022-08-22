@@ -1,8 +1,6 @@
 type Position = [number, number]
 type Move = [number, number]
 type State = {
-  height: number
-  width: number
   score: number
   entities: Entity[]
   // TODO: possible to have position as key in map?
@@ -31,18 +29,8 @@ const DIRECTIONS = ['up', 'down', 'left', 'right'] as const
 
 type Direction = typeof DIRECTIONS[number]
 
-// TODO calcular from width & height
-const POSITIONS: Position[] = [
-  [0, 0],
-  [0, 1],
-  [0, 2],
-  [1, 0],
-  [1, 1],
-  [1, 2],
-  [2, 0],
-  [2, 1],
-  [2, 2],
-]
+const cartesian = (...a: any[][]) =>
+  a.reduce((a2, b) => a2.flatMap((d) => b.map((e) => [d, e].flat())))
 
 const MOVES: {
   [key in Direction]: Move
@@ -52,6 +40,8 @@ const MOVES: {
   left: [-1, 0],
   right: [1, 0],
 }
+
+const range = (max: number) => Array.from(Array(max).keys())
 
 export const isDirection = (token: any): token is Direction =>
   DIRECTIONS.includes(token)
@@ -63,9 +53,12 @@ const isAvatar = (entity: Entity): entity is Avatar =>
 
 const isBomb = (entity: Entity): entity is Bomb => entity.__type === 'bomb'
 
+const HEIGHT = 3
+const WIDTH = 3
+
+const POSITIONS: Position[] = cartesian(range(WIDTH), range(HEIGHT))
+
 const state: State = {
-  height: 3,
-  width: 3,
   score: 0,
   entities: [
     {
@@ -84,7 +77,7 @@ const state: State = {
 }
 
 const positionIsAllowed = ([x, y]: Position): boolean =>
-  x >= 0 && x < state.width && y >= 0 && y < state.height
+  x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT
 
 const isSamePosition = ([x1, y1]: Position, [x2, y2]: Position): boolean =>
   x1 === x2 && y1 === y2
