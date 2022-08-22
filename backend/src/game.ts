@@ -106,26 +106,20 @@ const randomAvailablePosition = (): Position => {
   return availablePositions[randomIndex]
 }
 
-const respawnCoin = () => {
-  const coin = state.entities.find(isCoin)
-  if (!coin) throw new Error('bomb not found')
-  coin.position = randomAvailablePosition()
-}
-
-const respawnBomb = () => {
-  const bomb = state.entities.find(isBomb)
-  if (!bomb) throw new Error('bomb not found')
-  bomb.position = randomAvailablePosition()
+const respawn = (entityGuard: (entity: Entity) => boolean) => {
+  const entity = state.entities.find(entityGuard)
+  if (!entity) throw new Error('entity not found')
+  entity.position = randomAvailablePosition()
 }
 
 const collectCoin = () => {
   state.score++
-  respawnCoin()
+  respawn(isCoin)
 }
 
 const blowUpBomb = () => {
   state.score = 0
-  respawnBomb()
+  respawn(isBomb)
 }
 
 export const move = (direction: Direction): State => {
