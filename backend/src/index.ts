@@ -5,9 +5,9 @@ const PORT = 3000
 
 const app = express()
 
-app.post('/:direction', async (req, res) => {
+app.post('/:player/:direction', async (req, res) => {
   const {
-    params: { direction },
+    params: { direction, player: playerName },
   } = req
 
   if (!isDirection(direction)) {
@@ -15,7 +15,7 @@ app.post('/:direction', async (req, res) => {
     res.end()
     return
   }
-  const state = move(direction)
+  const state = move(direction, playerName)
   res.json(state)
 })
 

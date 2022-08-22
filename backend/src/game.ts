@@ -21,9 +21,15 @@ type Bomb = BaseEntity & {
 
 type Entity = Avatar | Coin | Bomb
 
+type Player = {
+  name: string
+  moves: Move[]
+}
+
 type State = {
   score: number
   entities: Entity[]
+  players: Player[]
 }
 
 const DIRECTIONS = ['up', 'down', 'left', 'right'] as const
@@ -68,6 +74,7 @@ const state: State = {
       position: [0, 1],
     },
   ],
+  players: [],
 }
 
 // ---------- PURE ----------
@@ -89,6 +96,9 @@ const isSamePosition = ([x1, y1]: Position, [x2, y2]: Position): boolean =>
   x1 === x2 && y1 === y2
 
 // ---------- READS ----------
+
+const findPlayer = (playerName: string) =>
+  state.players.find((p) => p.name === playerName)
 
 const positionHasEntity = (
   pos: Position,
@@ -126,12 +136,32 @@ const blowUpBomb = () => {
   respawn(isBomb)
 }
 
-export const move = (direction: Direction): State => {
+const createPlayer = (playerName: string) => {
+  const player = {
+    name: playerName,
+    moves: [],
+  }
+  state.players.push(player)
+  return player
+}
+
+const ensurePlayer = (playerName: string) => {
+  const player = findPlayer(playerName)
+  if (!player) {
+    return createPlayer(playerName)
+  }
+  return player
+}
+
+export const move = (direction: Direction, playerName: string): State => {
+  const player = ensurePlayer(playerName)
+
   const avatar = state.entities.find(isAvatar)
   if (!avatar) throw new Error('avatar not found')
   const [x, y] = avatar.position
 
-  const [mX, mY] = MOVES[direction]
+  const move = MOVES[direction]
+  const [mX, mY] = move
   const newPos: Position = [x + mX, y + mY]
 
   if (!positionIsAllowed(newPos)) {
@@ -139,6 +169,7 @@ export const move = (direction: Direction): State => {
   }
 
   avatar.position = newPos
+  player.moves.push(move)
 
   if (positionHasEntity(newPos, isCoin)) {
     collectCoin()
