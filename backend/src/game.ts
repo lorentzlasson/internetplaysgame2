@@ -89,16 +89,11 @@ const positionIsAllowed = ([x, y]: Position): boolean =>
 const isSamePosition = ([x1, y1]: Position, [x2, y2]: Position): boolean =>
   x1 === x2 && y1 === y2
 
-// TODO: use isSamePosition
-const positionIsCoin = ([x, y]: Position): boolean =>
-  state.entities.some(
-    (e) => isCoin(e) && e.position[0] === x && e.position[1] === y
-  )
-
-const positionIsBomb = ([x, y]: Position): boolean =>
-  state.entities.some(
-    (e) => isBomb(e) && e.position[0] === x && e.position[1] === y
-  )
+const positionHasEntity = (
+  pos: Position,
+  entityGuard: (entity: Entity) => boolean
+): boolean =>
+  state.entities.some((e) => entityGuard(e) && isSamePosition(e.position, pos))
 
 const randomCapped = (cap: number) => Math.floor(Math.random() * cap)
 const randomAvailablePosition = (): Position => {
@@ -147,11 +142,11 @@ export const move = (direction: Direction): State => {
 
   avatar.position = newPos
 
-  if (positionIsCoin(newPos)) {
+  if (positionHasEntity(newPos, isCoin)) {
     collectCoin()
   }
 
-  if (positionIsBomb(newPos)) {
+  if (positionHasEntity(newPos, isBomb)) {
     blowUpBomb()
   }
 
