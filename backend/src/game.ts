@@ -3,8 +3,6 @@ type Move = [number, number]
 type State = {
   score: number
   entities: Entity[]
-  // TODO: possible to have position as key in map?
-  // entities: { [key in Position]: Entity }
 }
 
 type BaseEntity = {
