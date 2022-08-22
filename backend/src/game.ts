@@ -31,15 +31,18 @@ const DIRECTIONS = ['up', 'down', 'left', 'right'] as const
 
 type Direction = typeof DIRECTIONS[number]
 
-export const isDirection = (token: any): token is Direction =>
-  DIRECTIONS.includes(token)
-
-const isCoin = (entity: Entity): entity is Coin => entity.__type === 'coin'
-
-const isAvatar = (entity: Entity): entity is Avatar =>
-  entity.__type === 'avatar'
-
-const isBomb = (entity: Entity): entity is Bomb => entity.__type === 'bomb'
+// TODO calcular from width & height
+const POSITIONS: Position[] = [
+  [0, 0],
+  [0, 1],
+  [0, 2],
+  [1, 0],
+  [1, 1],
+  [1, 2],
+  [2, 0],
+  [2, 1],
+  [2, 2],
+]
 
 const MOVES: {
   [key in Direction]: Move
@@ -49,6 +52,16 @@ const MOVES: {
   left: [-1, 0],
   right: [1, 0],
 }
+
+export const isDirection = (token: any): token is Direction =>
+  DIRECTIONS.includes(token)
+
+const isCoin = (entity: Entity): entity is Coin => entity.__type === 'coin'
+
+const isAvatar = (entity: Entity): entity is Avatar =>
+  entity.__type === 'avatar'
+
+const isBomb = (entity: Entity): entity is Bomb => entity.__type === 'bomb'
 
 const state: State = {
   height: 3,
@@ -73,6 +86,10 @@ const state: State = {
 const positionIsAllowed = ([x, y]: Position): boolean =>
   x >= 0 && x < state.width && y >= 0 && y < state.height
 
+const isSamePosition = ([x1, y1]: Position, [x2, y2]: Position): boolean =>
+  x1 === x2 && y1 === y2
+
+// TODO: use isSamePosition
 const positionIsCoin = ([x, y]: Position): boolean =>
   state.entities.some(
     (e) => isCoin(e) && e.position[0] === x && e.position[1] === y
@@ -84,21 +101,26 @@ const positionIsBomb = ([x, y]: Position): boolean =>
   )
 
 const randomCapped = (cap: number) => Math.floor(Math.random() * cap)
-const randomPosition = (): Position => [
-  randomCapped(state.width),
-  randomCapped(state.height),
-]
+const randomAvailablePosition = (): Position => {
+  const occupiedPositions = state.entities.map((e) => e.position)
+  const availablePositions = POSITIONS.filter(
+    (pos) =>
+      !occupiedPositions.some((occupiedPos) => isSamePosition(occupiedPos, pos))
+  )
+  const randomIndex = randomCapped(availablePositions.length - 1)
+  return availablePositions[randomIndex]
+}
 
 const respawnCoin = () => {
   const coin = state.entities.find(isCoin)
   if (!coin) throw new Error('bomb not found')
-  coin.position = randomPosition()
+  coin.position = randomAvailablePosition()
 }
 
 const respawnBomb = () => {
   const bomb = state.entities.find(isBomb)
   if (!bomb) throw new Error('bomb not found')
-  bomb.position = randomPosition()
+  bomb.position = randomAvailablePosition()
 }
 
 const collectCoin = () => {
