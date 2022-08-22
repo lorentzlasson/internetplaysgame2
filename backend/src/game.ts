@@ -1,9 +1,7 @@
+// ---------- TYPES ----------
+//
 type Position = [number, number]
 type Move = [number, number]
-type State = {
-  score: number
-  entities: Entity[]
-}
 
 type BaseEntity = {
   position: Position
@@ -23,12 +21,20 @@ type Bomb = BaseEntity & {
 
 type Entity = Avatar | Coin | Bomb
 
+type State = {
+  score: number
+  entities: Entity[]
+}
+
 const DIRECTIONS = ['up', 'down', 'left', 'right'] as const
 
 type Direction = typeof DIRECTIONS[number]
 
 const cartesian = (...a: any[][]) =>
   a.reduce((a2, b) => a2.flatMap((d) => b.map((e) => [d, e].flat())))
+const range = (max: number) => Array.from(Array(max).keys())
+
+// ---------- CONSTANTS ----------
 
 const MOVES: {
   [key in Direction]: Move
@@ -39,22 +45,12 @@ const MOVES: {
   right: [1, 0],
 }
 
-const range = (max: number) => Array.from(Array(max).keys())
-
-export const isDirection = (token: any): token is Direction =>
-  DIRECTIONS.includes(token)
-
-const isCoin = (entity: Entity): entity is Coin => entity.__type === 'coin'
-
-const isAvatar = (entity: Entity): entity is Avatar =>
-  entity.__type === 'avatar'
-
-const isBomb = (entity: Entity): entity is Bomb => entity.__type === 'bomb'
-
 const HEIGHT = 3
 const WIDTH = 3
 
 const POSITIONS: Position[] = cartesian(range(WIDTH), range(HEIGHT))
+
+// ---------- STATE ----------
 
 const state: State = {
   score: 0,
@@ -74,11 +70,25 @@ const state: State = {
   ],
 }
 
+// ---------- PURE ----------
+
+export const isDirection = (token: any): token is Direction =>
+  DIRECTIONS.includes(token)
+
+const isCoin = (entity: Entity): entity is Coin => entity.__type === 'coin'
+
+const isAvatar = (entity: Entity): entity is Avatar =>
+  entity.__type === 'avatar'
+
+const isBomb = (entity: Entity): entity is Bomb => entity.__type === 'bomb'
+
 const positionIsAllowed = ([x, y]: Position): boolean =>
   x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT
 
 const isSamePosition = ([x1, y1]: Position, [x2, y2]: Position): boolean =>
   x1 === x2 && y1 === y2
+
+// ---------- READS ----------
 
 const positionHasEntity = (
   pos: Position,
@@ -87,6 +97,7 @@ const positionHasEntity = (
   state.entities.some((e) => entityGuard(e) && isSamePosition(e.position, pos))
 
 const randomCapped = (cap: number) => Math.floor(Math.random() * cap)
+
 const randomAvailablePosition = (): Position => {
   const occupiedPositions = state.entities.map((e) => e.position)
   const availablePositions = POSITIONS.filter(
@@ -96,6 +107,8 @@ const randomAvailablePosition = (): Position => {
   const randomIndex = randomCapped(availablePositions.length - 1)
   return availablePositions[randomIndex]
 }
+
+// ---------- MUTATIONS ----------
 
 const respawn = (entityGuard: (entity: Entity) => boolean) => {
   const entity = state.entities.find(entityGuard)
