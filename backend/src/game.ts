@@ -1,7 +1,7 @@
 // ---------- TYPES ----------
 
 type Position = [number, number]
-type Move = [number, number]
+type Move = [number, number] // numbers should be contrained to -1, 0, 1
 
 type BaseEntity = {
   position: Position
