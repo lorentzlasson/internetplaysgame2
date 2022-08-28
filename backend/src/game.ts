@@ -1,6 +1,6 @@
 // ---------- TYPES ----------
 
-type Position = [number, number]
+type Position = [number, number] // numbers should be contrained to width and height of game board
 type Move = [number, number] // numbers should be contrained to -1, 0, 1
 
 type BaseEntity = {
