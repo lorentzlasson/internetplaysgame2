@@ -1,9 +1,13 @@
 import express from 'express'
-import { isDirection, move } from './game'
+import { isDirection, recordMove, initateGameMaster, getState } from './game'
 
 const PORT = 3000
 
 const app = express()
+
+app.get('*', async (_req, res) => {
+  res.json(getState())
+})
 
 app.post('/:player/:direction', async (req, res) => {
   const {
@@ -15,10 +19,12 @@ app.post('/:player/:direction', async (req, res) => {
     res.end()
     return
   }
-  const state = move(direction, playerName)
+  const state = recordMove(direction, playerName)
   res.json(state)
 })
 
 app.listen(PORT, () => {
   console.log(`Game running on port ${PORT}`)
+
+  initateGameMaster()
 })

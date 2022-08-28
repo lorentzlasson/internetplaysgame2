@@ -26,10 +26,17 @@ type Player = {
   moves: Move[]
 }
 
+type MoveCandiate = {
+  move: Move
+  player: Player
+  newPosition: Position
+}
+
 type State = {
   score: number
   entities: Entity[]
   players: Player[]
+  moveCandidates: MoveCandiate[]
 }
 
 const DIRECTIONS = ['up', 'down', 'left', 'right'] as const
@@ -75,6 +82,7 @@ const state: State = {
     },
   ],
   players: [],
+  moveCandidates: [],
 }
 
 // ---------- PURE ----------
@@ -118,6 +126,8 @@ const randomAvailablePosition = (): Position => {
   return availablePositions[randomIndex]
 }
 
+export const getState = () => state
+
 // ---------- MUTATIONS ----------
 
 const respawn = (entityGuard: (entity: Entity) => boolean) => {
@@ -134,6 +144,10 @@ const collectCoin = () => {
 const blowUpBomb = () => {
   state.score = 0
   respawn(isBomb)
+}
+
+const clearMoveCandiates = () => {
+  state.moveCandidates = []
 }
 
 const createPlayer = (playerName: string) => {
@@ -153,7 +167,7 @@ const ensurePlayer = (playerName: string) => {
   return player
 }
 
-export const move = (direction: Direction, playerName: string): State => {
+export const recordMove = (direction: Direction, playerName: string): State => {
   const player = ensurePlayer(playerName)
 
   const avatar = state.entities.find(isAvatar)
@@ -162,22 +176,59 @@ export const move = (direction: Direction, playerName: string): State => {
 
   const move = MOVES[direction]
   const [mX, mY] = move
-  const newPos: Position = [x + mX, y + mY]
+  const newPosition: Position = [x + mX, y + mY]
 
-  if (!positionIsAllowed(newPos)) {
+  if (!positionIsAllowed(newPosition)) {
+    console.log(
+      `player ${player.name} move ${direction} to ${newPosition} is not allowed`
+    )
     return state
   }
 
-  avatar.position = newPos
-  player.moves.push(move)
+  state.moveCandidates.push({
+    player,
+    move,
+    newPosition,
+  })
 
-  if (positionHasEntity(newPos, isCoin)) {
+  console.log(
+    `player ${player.name} move ${direction} to ${newPosition} is added to candidates`
+  )
+
+  return state
+}
+
+const executeNextMove = () => {
+  const moveCandidates = state.moveCandidates
+  console.log(`move candidates: ${moveCandidates.length}`)
+
+  if (moveCandidates.length === 0) return
+
+  const [nextMove] = state.moveCandidates
+
+  const avatar = state.entities.find(isAvatar)
+  if (!avatar) throw new Error('avatar not found')
+
+  avatar.position = nextMove.newPosition
+
+  nextMove.player.moves.push(nextMove.move)
+
+  if (positionHasEntity(nextMove.newPosition, isCoin)) {
     collectCoin()
   }
 
-  if (positionHasEntity(newPos, isBomb)) {
+  if (positionHasEntity(nextMove.newPosition, isBomb)) {
     blowUpBomb()
   }
 
-  return state
+  console.log(
+    `player ${nextMove.player.name} move ${nextMove.move} to ${nextMove.newPosition} was executed`
+  )
+
+  clearMoveCandiates()
+}
+
+export const initateGameMaster = () => {
+  executeNextMove()
+  setTimeout(initateGameMaster, 5000)
 }
