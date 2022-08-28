@@ -1,5 +1,5 @@
 // ---------- TYPES ----------
-//
+
 type Position = [number, number]
 type Move = [number, number]
 
