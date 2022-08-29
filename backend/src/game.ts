@@ -63,6 +63,8 @@ const WIDTH = 3
 
 const POSITIONS: Position[] = cartesian(range(WIDTH), range(HEIGHT))
 
+const MOVE_SELECTION_MILLIS = 5000 // find seconds
+
 // ---------- STATE ----------
 
 const state: State = {
@@ -230,5 +232,5 @@ export const executeNextMove = () => {
     clearMoveCandiates()
   }
 
-  setTimeout(executeNextMove, 5000)
+  setTimeout(executeNextMove, MOVE_SELECTION_MILLIS)
 }
