@@ -108,6 +108,12 @@ const isSamePosition = ([x1, y1]: Position, [x2, y2]: Position): boolean =>
 const findPlayer = (playerName: string) =>
   state.players.find((p) => p.name === playerName)
 
+const findAvatar = () => {
+  const avatar = state.entities.find(isAvatar)
+  if (!avatar) throw new Error('avatar not found')
+  return avatar
+}
+
 const positionHasEntity = (
   pos: Position,
   entityGuard: (entity: Entity) => boolean
@@ -170,9 +176,7 @@ const ensurePlayer = (playerName: string) => {
 export const recordMove = (direction: Direction, playerName: string): State => {
   const player = ensurePlayer(playerName)
 
-  const avatar = state.entities.find(isAvatar)
-  if (!avatar) throw new Error('avatar not found')
-  const [x, y] = avatar.position
+  const [x, y] = findAvatar().position
 
   const move = MOVES[direction]
   const [mX, mY] = move
@@ -205,8 +209,7 @@ export const executeNextMove = () => {
   if (moveCandidates.length !== 0) {
     const [nextMove] = state.moveCandidates
 
-    const avatar = state.entities.find(isAvatar)
-    if (!avatar) throw new Error('avatar not found')
+    const avatar = findAvatar()
 
     avatar.position = nextMove.newPosition
 
