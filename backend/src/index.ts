@@ -1,5 +1,5 @@
 import express from 'express'
-import { isDirection, recordMove, initateGameMaster, getState } from './game'
+import { isDirection, recordMove, executeNextMove, getState } from './game'
 
 const PORT = 3000
 
@@ -26,5 +26,5 @@ app.post('/:player/:direction', async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Game running on port ${PORT}`)
 
-  initateGameMaster()
+  executeNextMove()
 })

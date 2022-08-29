@@ -198,37 +198,34 @@ export const recordMove = (direction: Direction, playerName: string): State => {
   return state
 }
 
-const executeNextMove = () => {
+export const executeNextMove = () => {
   const moveCandidates = state.moveCandidates
   console.log(`move candidates: ${moveCandidates.length}`)
 
-  if (moveCandidates.length === 0) return
+  if (moveCandidates.length !== 0) {
+    const [nextMove] = state.moveCandidates
 
-  const [nextMove] = state.moveCandidates
+    const avatar = state.entities.find(isAvatar)
+    if (!avatar) throw new Error('avatar not found')
 
-  const avatar = state.entities.find(isAvatar)
-  if (!avatar) throw new Error('avatar not found')
+    avatar.position = nextMove.newPosition
 
-  avatar.position = nextMove.newPosition
+    nextMove.player.moves.push(nextMove.move)
 
-  nextMove.player.moves.push(nextMove.move)
+    if (positionHasEntity(nextMove.newPosition, isCoin)) {
+      collectCoin()
+    }
 
-  if (positionHasEntity(nextMove.newPosition, isCoin)) {
-    collectCoin()
+    if (positionHasEntity(nextMove.newPosition, isBomb)) {
+      blowUpBomb()
+    }
+
+    console.log(
+      `player ${nextMove.player.name} move ${nextMove.move} to ${nextMove.newPosition} was executed`
+    )
+
+    clearMoveCandiates()
   }
 
-  if (positionHasEntity(nextMove.newPosition, isBomb)) {
-    blowUpBomb()
-  }
-
-  console.log(
-    `player ${nextMove.player.name} move ${nextMove.move} to ${nextMove.newPosition} was executed`
-  )
-
-  clearMoveCandiates()
-}
-
-export const initateGameMaster = () => {
-  executeNextMove()
-  setTimeout(initateGameMaster, 5000)
+  setTimeout(executeNextMove, 5000)
 }
