@@ -1,6 +1,6 @@
 // ---------- TYPES ----------
 
-type Position = [number, number] // numbers should be contrained to width and height of game board
+export type Position = [number, number] // numbers should be contrained to width and height of game board
 type Move = [number, number] // numbers should be contrained to -1, 0, 1
 
 type BaseEntity = {
@@ -19,7 +19,7 @@ type Bomb = BaseEntity & {
   __type: 'bomb'
 }
 
-type Entity = Avatar | Coin | Bomb
+export type Entity = Avatar | Coin | Bomb
 
 type Player = {
   name: string
@@ -32,7 +32,7 @@ type MoveCandiate = {
   newPosition: Position
 }
 
-type State = {
+export type State = {
   score: number
   entities: Entity[]
   players: Player[]
@@ -41,7 +41,7 @@ type State = {
 
 const DIRECTIONS = ['up', 'down', 'left', 'right'] as const
 
-type Direction = typeof DIRECTIONS[number]
+export type Direction = typeof DIRECTIONS[number]
 
 const cartesian = (...a: any[][]) =>
   a.reduce((a2, b) => a2.flatMap((d) => b.map((e) => [d, e].flat())))
@@ -63,7 +63,7 @@ const WIDTH = 3
 
 const POSITIONS: Position[] = cartesian(range(WIDTH), range(HEIGHT))
 
-const MOVE_SELECTION_MILLIS = 5000 // find seconds
+export const MOVE_SELECTION_MILLIS = 1000 // one second
 
 // ---------- STATE ----------
 
@@ -92,18 +92,22 @@ const state: State = {
 export const isDirection = (token: any): token is Direction =>
   DIRECTIONS.includes(token)
 
-const isCoin = (entity: Entity): entity is Coin => entity.__type === 'coin'
+export const isCoin = (entity: Entity): entity is Coin =>
+  entity.__type === 'coin'
 
-const isAvatar = (entity: Entity): entity is Avatar =>
+export const isAvatar = (entity: Entity): entity is Avatar =>
   entity.__type === 'avatar'
 
-const isBomb = (entity: Entity): entity is Bomb => entity.__type === 'bomb'
+export const isBomb = (entity: Entity): entity is Bomb =>
+  entity.__type === 'bomb'
 
 const positionIsAllowed = ([x, y]: Position): boolean =>
   x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT
 
-const isSamePosition = ([x1, y1]: Position, [x2, y2]: Position): boolean =>
-  x1 === x2 && y1 === y2
+export const isSamePosition = (
+  [x1, y1]: Position,
+  [x2, y2]: Position
+): boolean => x1 === x2 && y1 === y2
 
 // ---------- READS ----------
 
