@@ -27,16 +27,9 @@ const move = async (
     },
   }).then((x) => x.json())
 
-  console.log(playerName, direction)
   await waitForMoveExecution()
-  console.log('executed')
 
   return getState()
-}
-
-const debug = async () => {
-  const state = await getState()
-  log(console.log, state)
 }
 
 const log = (logFunction: (x: any) => any, ...args: Object[]) => {
@@ -88,10 +81,12 @@ const assertPlayerCount = async (expectedPlayerCount: number) => {
 
 const runFlow = async () => {
   // Verify initial state
-  assertEntityIsInPosition(isAvatar, [0, 2])
-  assertEntityIsInPosition(isCoin, [2, 0])
-  assertEntityIsInPosition(isBomb, [0, 1])
-  assertScore(0)
+  await Promise.all([
+    assertEntityIsInPosition(isAvatar, [0, 2]),
+    assertEntityIsInPosition(isCoin, [2, 0]),
+    assertEntityIsInPosition(isBomb, [0, 1]),
+    assertScore(0),
+  ])
 
   await move('a', 'right')
   await move('b', 'right')
@@ -99,27 +94,26 @@ const runFlow = async () => {
   await move('b', 'up')
 
   // Coin is collected
-  assertScore(1)
+  await assertScore(1)
 
   await move('a', 'left')
   await move('c', 'down')
   await move('a', 'left')
 
-  // Bob is blown up, reseting score to 0
-  // (Score might have gone up over 1 before bomb explosion depending on randomized respawn location on coin)
-  assertScore(0)
+  await Promise.all([
+    // Bomb is blown up, reseting score to 0
+    // (Score might have gone up over 1 before bomb explosion depending on randomized respawn location on coin)
+    assertScore(0),
 
-  // Avatar has moved and both coin and bomb has changed location
-  assertEntityIsInPosition(isAvatar, [0, 1])
-  assertEntityIsNotInPosition(isCoin, [2, 0])
-  assertEntityIsNotInPosition(isBomb, [0, 1])
+    // Avatar has moved and both coin and bomb has changed location
+    assertEntityIsInPosition(isAvatar, [0, 1]),
+    assertEntityIsNotInPosition(isCoin, [2, 0]),
+    assertEntityIsNotInPosition(isBomb, [0, 1]),
 
-  assertPlayerCount(3)
-  // TODO: assert move count is 7
+    assertPlayerCount(3),
+  ])
 
-  await debug()
-
-  console.log('PASS')
+  console.log('TEST PASS')
 }
 
 runFlow()
