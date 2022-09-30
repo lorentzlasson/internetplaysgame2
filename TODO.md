@@ -1,4 +1,3 @@
-- smoke test
 - frontend
 - spice up move selection
 - persist state
