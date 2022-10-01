@@ -36,6 +36,8 @@ const log = (logFunction: (x: any) => any, ...args: Object[]) => {
   logFunction(prettyArgs)
 }
 
+const logState = async () => log(console.log, await getState())
+
 const assertEntityIsInPosition = async (
   entityGuard: (entity: Entity) => boolean,
   position: Position
@@ -158,6 +160,8 @@ const runFlow = async () => {
     assertPlayerCount(3),
     assertMoveCount(7),
   ])
+
+  if (process.env.VERBOSE) await logState()
 
   console.log('TEST PASS')
 }
