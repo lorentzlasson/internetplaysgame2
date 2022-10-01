@@ -10,6 +10,8 @@ import {
   isSamePosition,
 } from '../src/game'
 
+type MoveAttempt = [string, Direction]
+
 // TODO: allow configuration of MOVE_SELECTION_MILLIS to be able to run
 // faster in test than in prod
 const waitForMoveExecution = async () =>
@@ -18,21 +20,16 @@ const waitForMoveExecution = async () =>
 const getState = async (): Promise<State> =>
   fetch('http://localhost:3000').then((x) => x.json())
 
-const move = async (
-  playerName: string,
-  direction: Direction
-): Promise<State> => {
-  await fetch(`http://localhost:3000/${playerName}/${direction}`, {
+const recordMoves = async (moves: MoveAttempt[]) =>
+  Promise.all(moves.map(recordMove))
+
+const recordMove = async ([playerName, direction]: MoveAttempt) =>
+  fetch(`http://localhost:3000/${playerName}/${direction}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
   }).then((x) => x.json())
-
-  await waitForMoveExecution()
-
-  return getState()
-}
 
 const log = (logFunction: (x: any) => any, ...args: Object[]) => {
   const prettyArgs = JSON.stringify(args, null, 2)
@@ -81,6 +78,15 @@ const assertPlayerCount = async (expectedPlayerCount: number) => {
   }
 }
 
+const assertMoveCount = async (expectedMoveCount: number) => {
+  const state = await getState()
+  const count = state.players.flatMap((x) => x.moves).length
+  if (count !== expectedMoveCount) {
+    log(console.error, { count }, { expectedMoveCount })
+    throw new Error('assertMoveCount failure')
+  }
+}
+
 const runFlow = async () => {
   // Verify initial state
   await Promise.all([
@@ -90,30 +96,67 @@ const runFlow = async () => {
     assertScore(0),
   ])
 
-  // TODO: make several move before awaiting move selection
-  await move('a', 'right')
-  await move('b', 'right')
-  await move('a', 'up')
-  await move('b', 'up')
+  await recordMoves([
+    ['a', 'right'],
+    ['b', 'right'],
+  ])
+  await waitForMoveExecution()
 
-  // Coin is collected
-  await assertScore(1)
+  await recordMoves([
+    ['a', 'right'],
+    ['b', 'right'],
+  ])
+  await waitForMoveExecution()
 
-  await move('a', 'left')
-  await move('c', 'down')
-  await move('a', 'left')
+  await recordMoves([
+    ['a', 'up'],
+    ['b', 'up'],
+  ])
+  await waitForMoveExecution()
+
+  await recordMoves([
+    ['a', 'up'],
+    ['b', 'up'],
+  ])
+  await waitForMoveExecution()
+
+  await Promise.all([
+    // Coin is collected
+    assertScore(1),
+    // Coin has respawned in new location location
+    assertEntityIsNotInPosition(isCoin, [2, 0]),
+  ])
+
+  await recordMoves([
+    ['a', 'left'],
+    ['c', 'left'],
+  ])
+  await waitForMoveExecution()
+
+  await recordMoves([
+    ['a', 'down'],
+    ['c', 'down'],
+  ])
+  await waitForMoveExecution()
+
+  await recordMoves([
+    ['a', 'left'],
+    ['c', 'left'],
+  ])
+  await waitForMoveExecution()
 
   await Promise.all([
     // Bomb is blown up, reseting score to 0
     // (Score might have gone up over 1 before bomb explosion depending on randomized respawn location on coin)
     assertScore(0),
 
-    // Avatar has moved and both coin and bomb has changed location
+    // Avatar is in position where bomb was previously
     assertEntityIsInPosition(isAvatar, [0, 1]),
-    assertEntityIsNotInPosition(isCoin, [2, 0]),
+    // Bomb has respawned in new location location
     assertEntityIsNotInPosition(isBomb, [0, 1]),
 
     assertPlayerCount(3),
+    assertMoveCount(7),
   ])
 
   console.log('TEST PASS')
