@@ -63,7 +63,8 @@ const WIDTH = 3
 
 const POSITIONS: Position[] = cartesian(range(WIDTH), range(HEIGHT))
 
-export const MOVE_SELECTION_MILLIS = 1000 // one second
+export const MOVE_SELECTION_MILLIS =
+  parseInt(process.env.MOVE_SELECTION_MILLIS || '') || 5000
 
 // ---------- STATE ----------
 

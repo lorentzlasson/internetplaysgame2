@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export MOVE_SELECTION_MILLIS=500 # To speed up test
+
 vite-node src &
 pid=$!
 echo "# NODE PROCESS STARTED - ${pid}"

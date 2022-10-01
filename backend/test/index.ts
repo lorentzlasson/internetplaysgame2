@@ -12,8 +12,6 @@ import {
 
 type MoveAttempt = [string, Direction]
 
-// TODO: allow configuration of MOVE_SELECTION_MILLIS to be able to run
-// faster in test than in prod
 const waitForMoveExecution = async () =>
   new Promise((resolve) => setTimeout(resolve, MOVE_SELECTION_MILLIS * 1.5))
 
