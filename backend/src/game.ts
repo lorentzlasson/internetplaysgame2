@@ -139,6 +139,11 @@ const randomAvailablePosition = (): Position => {
   return availablePositions[randomIndex]
 }
 
+const randomMoveCandidate = () => {
+  const randomIndex = randomCapped(state.moveCandidates.length)
+  return state.moveCandidates[randomIndex]
+}
+
 export const getState = () => state
 
 // ---------- MUTATIONS ----------
@@ -214,7 +219,7 @@ export const executeNextMove = () => {
   console.log(`move candidates: ${moveCandidates.length}`)
 
   if (moveCandidates.length !== 0) {
-    const [nextMove] = state.moveCandidates
+    const nextMove = randomMoveCandidate()
 
     const avatar = findAvatar()
 
