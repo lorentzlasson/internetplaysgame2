@@ -1,4 +1,4 @@
-import { isAvatar, isBomb, isCoin } from '../src/game'
+import { isAvatar, isBomb, isCoin } from '../../common'
 import {
   assertEntityIsInPosition,
   assertPlayerCount,

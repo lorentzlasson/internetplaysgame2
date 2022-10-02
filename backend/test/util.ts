@@ -1,11 +1,11 @@
 import {
   Direction,
   State,
-  MOVE_SELECTION_MILLIS,
   Entity,
   Position,
   isSamePosition,
-} from '../src/game'
+} from '../../common'
+import { MOVE_SELECTION_MILLIS } from '../src/game'
 
 type MoveAttempt = [string, Direction]
 

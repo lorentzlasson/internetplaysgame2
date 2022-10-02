@@ -1,30 +1,10 @@
-type Position = [number, number]
-
-type BaseEntity = {
-  position: Position
-}
-
-type Avatar = BaseEntity & {
-  __type: 'avatar'
-}
-
-type Coin = BaseEntity & {
-  __type: 'coin'
-}
-
-type Bomb = BaseEntity & {
-  __type: 'bomb'
-}
-
-type Entity = Avatar | Coin | Bomb
+import { State } from '../../common'
 
 const ICONS = {
   bomb: '💣',
   coin: '🪙',
   avatar: '🏃',
 }
-
-type State = { entities: Entity[]; score: number }
 
 const f = async () => {
   try {

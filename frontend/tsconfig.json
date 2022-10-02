@@ -2,6 +2,7 @@
   "compilerOptions": {
     "outDir": "build",
     "lib": ["es2022", "dom"],
+    "moduleResolution": "node",
     "target": "es2022"
   },
   "include": ["src"],

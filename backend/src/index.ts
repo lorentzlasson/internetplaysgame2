@@ -1,6 +1,7 @@
 import express from 'express'
 import cors from 'cors'
-import { isDirection, recordMove, executeNextMove, getState } from './game'
+import { recordMove, executeNextMove, getState } from './game'
+import { isDirection } from '../../common'
 
 const PORT = 3000
 
