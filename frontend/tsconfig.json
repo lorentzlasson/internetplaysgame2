@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "outDir": "build",
+    "lib": ["es2022", "dom"],
+    "target": "es2022"
+  },
+  "include": ["src"],
+  "exclude": ["node_modules"]
+}

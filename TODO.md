@@ -1,3 +1,5 @@
-- frontend
+- share types with BE/FE
+- dont reload page on tick
+- ui move input
 - persist state
 - user mgmt

@@ -1,9 +1,11 @@
 import express from 'express'
+import cors from 'cors'
 import { isDirection, recordMove, executeNextMove, getState } from './game'
 
 const PORT = 3000
 
 const app = express()
+app.use(cors())
 
 app.get('*', async (_req, res) => {
   res.json(getState())
