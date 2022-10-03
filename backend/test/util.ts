@@ -9,17 +9,20 @@ import { MOVE_SELECTION_MILLIS } from '../src/game'
 
 type MoveAttempt = [string, Direction]
 
+const BASE_URL = 'http://localhost:3000'
+// const BASE_URL = 'https://backend-m4fko6ztna-lz.a.run.app/'
+
 export const waitForMoveExecution = async () =>
   new Promise((resolve) => setTimeout(resolve, MOVE_SELECTION_MILLIS * 1.5))
 
 const getState = async (): Promise<State> =>
-  fetch('http://localhost:3000').then((x) => x.json())
+  fetch(BASE_URL).then((x) => x.json())
 
 export const recordMoves = async (moves: MoveAttempt[]) =>
   Promise.all(moves.map(recordMove))
 
 const recordMove = async ([playerName, direction]: MoveAttempt) =>
-  fetch(`http://localhost:3000/${playerName}/${direction}`, {
+  fetch(`${BASE_URL}/${playerName}/${direction}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

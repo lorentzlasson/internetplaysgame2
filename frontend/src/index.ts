@@ -14,11 +14,14 @@ const KEY_DIRECTION_MAP: { [key: string]: Direction } = {
   ArrowRight: 'right',
 }
 
+const BASE_URL = 'http://localhost:3000'
+// const BASE_URL = 'https://backend-m4fko6ztna-lz.a.run.app/'
+
 const getState = async (): Promise<State> =>
-  fetch('http://localhost:3000').then((x) => x.json())
+  fetch(BASE_URL).then((x) => x.json())
 
 const recordMove = async (playerName: string, direction: Direction) =>
-  fetch(`http://localhost:3000/${playerName}/${direction}`, {
+  fetch(`${BASE_URL}/${playerName}/${direction}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
