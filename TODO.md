@@ -1,4 +1,3 @@
-- dont reload page on tick
 - ui move input
 - persist state
 - user mgmt

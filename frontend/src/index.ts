@@ -1,32 +1,37 @@
-import { State } from '../../common'
+import { State, isSamePosition, POSITIONS } from '../../common'
 
 const ICONS = {
   bomb: '💣',
   coin: '🪙',
   avatar: '🏃',
+  blank: '⬜',
+}
+
+const getState = async (): Promise<State> =>
+  fetch('http://localhost:3000').then((x) => x.json())
+
+const rerender = async () => {
+  const { entities, score }: State = await getState()
+
+  document.getElementById('score').textContent = score.toString()
+
+  POSITIONS.forEach((position) => {
+    const entity = entities.find((e) => isSamePosition(e.position, position))
+
+    const emoji = entity ? ICONS[entity.__type] : ICONS.blank
+
+    const elementID = position.toString()
+    document.getElementById(elementID).textContent = emoji
+  })
 }
 
 const f = async () => {
   try {
-    const { entities, score }: State = await fetch(
-      'http://localhost:3000'
-    ).then((x) => x.json())
-
-    document.getElementById('score').textContent = score.toString()
-
-    entities.forEach(({ position, __type }) => {
-      const pos = position.toString()
-      const emoji = ICONS[__type]
-
-      document.getElementById(pos).textContent = emoji
-    })
+    await rerender()
   } catch (error) {
     console.error(error)
   }
-
-  setTimeout(() => {
-    location.reload()
-  }, 1000)
+  setTimeout(f, 1000)
 }
 
 f()
