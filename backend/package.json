@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "start": "node build",
+    "start": "node build/backend/src",
     "test:smoke": "./test/index.sh",
     "test": "NODE_NO_WARNINGS=1 vite-node test",
     "build": "tsc",
