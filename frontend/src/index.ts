@@ -8,10 +8,10 @@ const ICONS = {
 }
 
 const MOVE_KEYS: { [key: string]: Direction } = {
-  w: 'up',
-  s: 'down',
-  a: 'left',
-  d: 'right',
+  ArrowUp: 'up',
+  ArrowDown: 'down',
+  ArrowLeft: 'left',
+  ArrowRight: 'right',
 }
 
 const getState = async (): Promise<State> =>
@@ -25,10 +25,15 @@ const recordMove = async (playerName: string, direction: Direction) =>
     },
   }).then((x) => x.json())
 
+const getPlayerName = () =>
+  (<HTMLInputElement>document.getElementById('playerName')).value
+
 const handleKeyPress = async ({ key }: KeyboardEvent) => {
   const direction = MOVE_KEYS[key]
   if (!direction) return
-  const state = await recordMove('default', direction)
+
+  const playerName = getPlayerName() || 'player name'
+  const state = await recordMove(playerName, direction)
   console.log(state)
 }
 
@@ -56,6 +61,6 @@ const f = async () => {
   setTimeout(f, 1000)
 }
 
-document.addEventListener('keypress', handleKeyPress)
+document.addEventListener('keydown', handleKeyPress)
 
 f()
