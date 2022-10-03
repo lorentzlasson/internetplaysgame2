@@ -1,4 +1,4 @@
-import { State, isSamePosition, POSITIONS } from '../../common'
+import { State, isSamePosition, POSITIONS, Direction } from '../../common'
 
 const ICONS = {
   bomb: '💣',
@@ -7,8 +7,30 @@ const ICONS = {
   blank: '⬜',
 }
 
+const MOVE_KEYS: { [key: string]: Direction } = {
+  w: 'up',
+  s: 'down',
+  a: 'left',
+  d: 'right',
+}
+
 const getState = async (): Promise<State> =>
   fetch('http://localhost:3000').then((x) => x.json())
+
+const recordMove = async (playerName: string, direction: Direction) =>
+  fetch(`http://localhost:3000/${playerName}/${direction}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  }).then((x) => x.json())
+
+const handleKeyPress = async ({ key }: KeyboardEvent) => {
+  const direction = MOVE_KEYS[key]
+  if (!direction) return
+  const state = await recordMove('default', direction)
+  console.log(state)
+}
 
 const rerender = async () => {
   const { entities, score }: State = await getState()
@@ -33,5 +55,7 @@ const f = async () => {
   }
   setTimeout(f, 1000)
 }
+
+document.addEventListener('keypress', handleKeyPress)
 
 f()
