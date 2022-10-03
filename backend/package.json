@@ -1,11 +1,9 @@
 {
   "scripts": {
-    "start": "node build/backend/src",
-    "test:smoke": "./test/index.sh",
+    "start": "vite-node src",
+    "dev": "vite-node --watch src",
     "test": "NODE_NO_WARNINGS=1 vite-node test",
-    "build": "tsc",
-    "dev": "vite-node src",
-    "watch": "vite-node --watch src"
+    "test:smoke": "./test/index.sh"
   },
   "devDependencies": {
     "@tsconfig/node18": "^1.0.0",
