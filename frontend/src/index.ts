@@ -7,7 +7,7 @@ const ICONS = {
   blank: '⬜',
 }
 
-const MOVE_KEYS: { [key: string]: Direction } = {
+const KEY_DIRECTION_MAP: { [key: string]: Direction } = {
   ArrowUp: 'up',
   ArrowDown: 'down',
   ArrowLeft: 'left',
@@ -29,7 +29,7 @@ const getPlayerName = () =>
   (<HTMLInputElement>document.getElementById('playerName')).value
 
 const handleKeyPress = async ({ key }: KeyboardEvent) => {
-  const direction = MOVE_KEYS[key]
+  const direction = KEY_DIRECTION_MAP[key]
   if (!direction) return
 
   const playerName = getPlayerName() || 'player name'
