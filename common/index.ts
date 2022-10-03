@@ -25,7 +25,7 @@ type Player = {
   moves: Move[]
 }
 
-type MoveCandiate = {
+export type MoveCandiate = {
   move: Move
   player: Player
   newPosition: Position

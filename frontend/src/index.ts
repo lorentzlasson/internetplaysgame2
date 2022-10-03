@@ -1,4 +1,10 @@
-import { State, isSamePosition, POSITIONS, Direction } from '../../common'
+import {
+  State,
+  MoveCandiate,
+  isSamePosition,
+  POSITIONS,
+  Direction,
+} from '../../common'
 
 const ICONS = {
   bomb: '💣',
@@ -40,8 +46,20 @@ const handleKeyPress = async ({ key }: KeyboardEvent) => {
   console.log(state)
 }
 
+const renderMoveCandidates = (moveCandidates: MoveCandiate[]) => {
+  const log = document.getElementById('log')
+  log.innerHTML = ''
+  moveCandidates.forEach(({ player: { name }, move }) => {
+    const line = `Player: "${name}", Move: [${move}]`
+    const node = document.createTextNode(line)
+    const div = document.createElement('div')
+    div.appendChild(node)
+    log.appendChild(div)
+  })
+}
+
 const rerender = async () => {
-  const { entities, score } = await getState()
+  const { entities, score, moveCandidates } = await getState()
 
   document.getElementById('score').textContent = score.toString()
 
@@ -53,6 +71,8 @@ const rerender = async () => {
     const elementID = position.toString()
     document.getElementById(elementID).textContent = emoji
   })
+
+  renderMoveCandidates(moveCandidates)
 }
 
 const f = async () => {
