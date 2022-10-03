@@ -38,7 +38,7 @@ const handleKeyPress = async ({ key }: KeyboardEvent) => {
 }
 
 const rerender = async () => {
-  const { entities, score }: State = await getState()
+  const { entities, score } = await getState()
 
   document.getElementById('score').textContent = score.toString()
 
