@@ -1,10 +1,5 @@
-import {
-  Direction,
-  State,
-  Entity,
-  Position,
-  isSamePosition,
-} from '../../common'
+import { strict as assert } from 'node:assert'
+import { Direction, State, Entity, Position } from '../../common'
 import { MOVE_SELECTION_MILLIS } from '../src/game'
 
 type MoveAttempt = [string, Direction]
@@ -37,51 +32,36 @@ export const logState = async () => log(console.log, await getState())
 
 export const assertEntityIsInPosition = async (
   entityGuard: (entity: Entity) => boolean,
-  position: Position
+  expectedPosition: Position
 ) => {
   const state = await getState()
-  const entity = state.entities.find(entityGuard)
-  if (!isSamePosition(entity.position, position)) {
-    log(console.error, { entity }, { position })
-    throw new Error('assertEntityIsInPosition failure')
-  }
+  const position = state.entities.find(entityGuard)?.position
+  assert.deepEqual(position, expectedPosition)
 }
 
 export const assertEntityIsNotInPosition = async (
   entityGuard: (entity: Entity) => boolean,
-  position: Position
+  expectedPosition: Position
 ) => {
   const state = await getState()
-  const entity = state.entities.find(entityGuard)
-  if (isSamePosition(entity.position, position)) {
-    log(console.error, { entity }, { position })
-    throw new Error('assertEntityIsNotInPosition failure')
-  }
+  const position = state.entities.find(entityGuard)?.position
+  assert.notDeepEqual(position, expectedPosition)
 }
 
 export const assertScore = async (expectedScore: number) => {
   const state = await getState()
   const score = state.score
-  if (score !== expectedScore) {
-    log(console.error, { score }, { expectedScore })
-    throw new Error('assertScore failure')
-  }
+  assert.equal(score, expectedScore)
 }
 
 export const assertPlayerCount = async (expectedPlayerCount: number) => {
   const state = await getState()
   const count = state.players.length
-  if (count !== expectedPlayerCount) {
-    log(console.error, { count }, { expectedPlayerCount })
-    throw new Error('assertPlayerCount failure')
-  }
+  assert.equal(count, expectedPlayerCount)
 }
 
 export const assertMoveCount = async (expectedMoveCount: number) => {
   const state = await getState()
   const count = state.players.flatMap((x) => x.moves).length
-  if (count !== expectedMoveCount) {
-    log(console.error, { count }, { expectedMoveCount })
-    throw new Error('assertMoveCount failure')
-  }
+  assert.equal(count, expectedMoveCount)
 }
