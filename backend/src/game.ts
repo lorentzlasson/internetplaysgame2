@@ -5,6 +5,7 @@ import {
   POSITIONS,
   Entity,
   Direction,
+  MoveCandidate,
   Move,
   isAvatar,
   isBomb,
@@ -123,7 +124,7 @@ const ensurePlayer = (playerName: string) => {
   return player
 }
 
-const ensureMoveCandidate = (move: Move) => {
+const ensureMoveCandidate = (move: MoveCandidate) => {
   const moveCandidate = findMoveCandidate(move.player.name)
   if (!moveCandidate) {
     return state.moveCandidates.push(move)
@@ -169,7 +170,10 @@ export const executeNextMove = () => {
 
     avatar.position = newPosition
 
-    registerMove(nextMove)
+    registerMove({
+      ...nextMove,
+      time: new Date().toJSON(),
+    })
 
     if (positionHasEntity(newPosition, isCoin)) {
       collectCoin()

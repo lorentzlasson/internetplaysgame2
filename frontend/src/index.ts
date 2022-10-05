@@ -1,4 +1,11 @@
-import { State, Move, isSamePosition, POSITIONS, Direction } from '../../common'
+import {
+  State,
+  MoveCandidate,
+  Move,
+  isSamePosition,
+  POSITIONS,
+  Direction,
+} from '../../common'
 
 const ICONS = {
   bomb: '💣',
@@ -39,7 +46,12 @@ const handleKeyPress = async ({ key }: KeyboardEvent) => {
   console.log(state)
 }
 
-const renderMoveCandidates = (moveCandidates: Move[]) => {
+const prettifyTime = (timeString: string) => {
+  const time = new Date(timeString)
+  return time.getHours() + ':' + time.getMinutes() + ':' + time.getSeconds()
+}
+
+const renderMoveCandidates = (moveCandidates: MoveCandidate[]) => {
   const element = document.getElementById('moveCandidates')
   element.innerHTML = ''
   moveCandidates.forEach(({ player: { name }, direction }) => {
@@ -54,8 +66,8 @@ const renderMoveCandidates = (moveCandidates: Move[]) => {
 const renderMoveHistory = (moveHistory: Move[]) => {
   const element = document.getElementById('moveHistory')
   element.innerHTML = ''
-  moveHistory.forEach(({ player: { name }, direction }) => {
-    const line = name + ' moved ' + direction
+  moveHistory.forEach(({ player: { name }, direction, time }) => {
+    const line = prettifyTime(time) + ' | ' + name + ' moved ' + direction
     const node = document.createTextNode(line)
     const div = document.createElement('div')
     div.appendChild(node)

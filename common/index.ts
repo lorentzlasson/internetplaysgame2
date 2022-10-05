@@ -24,16 +24,22 @@ type Player = {
   name: string
 }
 
-export type Move = {
+export type MoveCandidate = {
   direction: Direction
   player: Player
+}
+
+export type Move = MoveCandidate & {
+  direction: Direction
+  player: Player
+  time: string
 }
 
 export type State = {
   score: number
   entities: Entity[]
   players: Player[]
-  moveCandidates: Move[]
+  moveCandidates: MoveCandidate[]
   moveHistory: Move[]
 }
 
