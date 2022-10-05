@@ -40,19 +40,31 @@ const handleKeyPress = async ({ key }: KeyboardEvent) => {
 }
 
 const renderMoveCandidates = (moveCandidates: Move[]) => {
-  const log = document.getElementById('log')
-  log.innerHTML = ''
+  const element = document.getElementById('moveCandidates')
+  element.innerHTML = ''
   moveCandidates.forEach(({ player: { name }, direction }) => {
-    const line = `"${name}" wants to move ${direction}`
+    const line = name + ' wants to move ' + direction
     const node = document.createTextNode(line)
     const div = document.createElement('div')
     div.appendChild(node)
-    log.appendChild(div)
+    element.appendChild(div)
+  })
+}
+
+const renderMoveHistory = (moveHistory: Move[]) => {
+  const element = document.getElementById('moveHistory')
+  element.innerHTML = ''
+  moveHistory.forEach(({ player: { name }, direction }) => {
+    const line = name + ' moved ' + direction
+    const node = document.createTextNode(line)
+    const div = document.createElement('div')
+    div.appendChild(node)
+    element.appendChild(div)
   })
 }
 
 const rerender = async () => {
-  const { entities, score, moveCandidates } = await getState()
+  const { entities, score, moveCandidates, moveHistory } = await getState()
 
   document.getElementById('score').textContent = score.toString()
 
@@ -66,6 +78,7 @@ const rerender = async () => {
   })
 
   renderMoveCandidates(moveCandidates)
+  renderMoveHistory(moveHistory)
 }
 
 const f = async () => {

@@ -62,6 +62,6 @@ export const assertPlayerCount = async (expectedPlayerCount: number) => {
 
 export const assertMoveCount = async (expectedMoveCount: number) => {
   const state = await getState()
-  const count = state.players.flatMap((x) => x.moves).length
+  const count = state.moveHistory.length
   assert.equal(count, expectedMoveCount)
 }

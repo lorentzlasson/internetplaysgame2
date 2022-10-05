@@ -3,27 +3,30 @@
   <head>
     <title>Internet Plays Game</title>
   </head>
-  <body style="font-size: 100px">
+  <body style="display:flex">
     <script type="module" src="src/index.ts"></script>
-    <table>
-      <tr>
-        <td id="0,0">⬜</td>
-        <td id="1,0">⬜</td>
-        <td id="2,0">⬜</td>
-      </tr>
-      <tr>
-        <td id="0,1">⬜</td>
-        <td id="1,1">⬜</td>
-        <td id="2,1">⬜</td>
-      </tr>
-      <tr>
-        <td id="0,2">⬜</td>
-        <td id="1,2">⬜</td>
-        <td id="2,2">⬜</td>
-      </tr>
-    </table>
-    <div id="score"></div>
-    <input id="playerName" type="text" value="player name">
-    <div style="font-size: 20px" id="log"></div>
+    <div>
+      <table style="font-size: 100px">
+        <tr>
+          <td id="0,0">⬜</td>
+          <td id="1,0">⬜</td>
+          <td id="2,0">⬜</td>
+        </tr>
+        <tr>
+          <td id="0,1">⬜</td>
+          <td id="1,1">⬜</td>
+          <td id="2,1">⬜</td>
+        </tr>
+        <tr>
+          <td id="0,2">⬜</td>
+          <td id="1,2">⬜</td>
+          <td id="2,2">⬜</td>
+        </tr>
+      </table>
+      <div id="score"></div>
+      <input id="playerName" type="text" value="player name">
+      <div id="moveCandidates"></div>
+    </div>
+    <div id="moveHistory"></div>
   </body>
 </html>
