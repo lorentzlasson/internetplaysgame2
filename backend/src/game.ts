@@ -1,10 +1,11 @@
 import {
   Position,
   State,
-  MOVES,
+  MOVE_MOVEMENT_MAP,
   POSITIONS,
   Entity,
   Direction,
+  Move,
   isAvatar,
   isBomb,
   isCoin,
@@ -37,6 +38,7 @@ const state: State = {
   ],
   players: [],
   moveCandidates: [],
+  moveHistory: [],
 }
 
 // ---------- READS ----------
@@ -97,6 +99,10 @@ const clearMoveCandiates = () => {
   state.moveCandidates = []
 }
 
+const registerMove = (move: Move) => {
+  state.moveHistory.push(move)
+}
+
 const createPlayer = (playerName: string) => {
   const player = {
     name: playerName,
@@ -117,28 +123,12 @@ const ensurePlayer = (playerName: string) => {
 export const recordMove = (direction: Direction, playerName: string): State => {
   const player = ensurePlayer(playerName)
 
-  const [x, y] = findAvatar().position
-
-  const move = MOVES[direction]
-  const [mX, mY] = move
-  const newPosition: Position = [x + mX, y + mY]
-
-  if (!positionIsAllowed(newPosition)) {
-    console.log(
-      `player ${player.name} move ${direction} to ${newPosition} is not allowed`
-    )
-    return state
-  }
-
   state.moveCandidates.push({
     player,
-    move,
-    newPosition,
+    direction,
   })
 
-  console.log(
-    `player ${player.name} move ${direction} to ${newPosition} is added to candidates`
-  )
+  console.log(`player ${player.name} move ${direction} is added to candidates`)
 
   return state
 }
@@ -152,20 +142,33 @@ export const executeNextMove = () => {
 
     const avatar = findAvatar()
 
-    avatar.position = nextMove.newPosition
+    const { direction, player } = nextMove
 
-    nextMove.player.moves.push(nextMove.move)
+    const [x, y] = avatar.position
+    const [mX, mY] = MOVE_MOVEMENT_MAP[direction]
+    const newPosition: Position = [x + mX, y + mY]
 
-    if (positionHasEntity(nextMove.newPosition, isCoin)) {
+    if (!positionIsAllowed(newPosition)) {
+      console.log(
+        `player ${player.name} move ${direction} to ${newPosition} is not allowed`
+      )
+      return state
+    }
+
+    avatar.position = newPosition
+
+    registerMove(nextMove)
+
+    if (positionHasEntity(newPosition, isCoin)) {
       collectCoin()
     }
 
-    if (positionHasEntity(nextMove.newPosition, isBomb)) {
+    if (positionHasEntity(newPosition, isBomb)) {
       blowUpBomb()
     }
 
     console.log(
-      `player ${nextMove.player.name} move ${nextMove.move} to ${nextMove.newPosition} was executed`
+      `player ${player.name} move ${direction} to ${newPosition} was executed`
     )
 
     clearMoveCandiates()

@@ -1,6 +1,6 @@
 // ---------- TYPES ----------
 export type Position = [number, number] // numbers should be constrained to width and height of game board
-export type Move = [number, number] // numbers should be constrained to -1, 0, 1
+export type Movement = [number, number] // numbers should be constrained to -1, 0, 1
 
 type BaseEntity = {
   position: Position
@@ -22,20 +22,19 @@ export type Entity = Avatar | Coin | Bomb
 
 type Player = {
   name: string
-  moves: Move[]
 }
 
-export type MoveCandiate = {
-  move: Move
+export type Move = {
+  direction: Direction
   player: Player
-  newPosition: Position
 }
 
 export type State = {
   score: number
   entities: Entity[]
   players: Player[]
-  moveCandidates: MoveCandiate[]
+  moveCandidates: Move[]
+  moveHistory: Move[]
 }
 
 const DIRECTIONS = ['up', 'down', 'left', 'right'] as const
@@ -48,8 +47,8 @@ const cartesian = (...a: any[][]) =>
   a.reduce((a2, b) => a2.flatMap((d) => b.map((e) => [d, e].flat())))
 const range = (max: number) => Array.from(Array(max).keys())
 
-export const MOVES: {
-  [key in Direction]: Move
+export const MOVE_MOVEMENT_MAP: {
+  [key in Direction]: Movement
 } = {
   up: [0, -1],
   down: [0, 1],

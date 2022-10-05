@@ -1,10 +1,4 @@
-import {
-  State,
-  MoveCandiate,
-  isSamePosition,
-  POSITIONS,
-  Direction,
-} from '../../common'
+import { State, Move, isSamePosition, POSITIONS, Direction } from '../../common'
 
 const ICONS = {
   bomb: '💣',
@@ -45,11 +39,11 @@ const handleKeyPress = async ({ key }: KeyboardEvent) => {
   console.log(state)
 }
 
-const renderMoveCandidates = (moveCandidates: MoveCandiate[]) => {
+const renderMoveCandidates = (moveCandidates: Move[]) => {
   const log = document.getElementById('log')
   log.innerHTML = ''
-  moveCandidates.forEach(({ player: { name }, move }) => {
-    const line = `Player: "${name}", Move: [${move}]`
+  moveCandidates.forEach(({ player: { name }, direction }) => {
+    const line = `"${name}" wants to move ${direction}`
     const node = document.createTextNode(line)
     const div = document.createElement('div')
     div.appendChild(node)
