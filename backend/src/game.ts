@@ -46,6 +46,9 @@ const state: State = {
 const findPlayer = (playerName: string) =>
   state.players.find((p) => p.name === playerName)
 
+const findMoveCandidate = (playerName: string) =>
+  state.moveCandidates.find(({ player: p }) => p.name === playerName)
+
 const findAvatar = () => {
   const avatar = state.entities.find(isAvatar)
   if (!avatar) throw new Error('avatar not found')
@@ -120,10 +123,19 @@ const ensurePlayer = (playerName: string) => {
   return player
 }
 
+const ensureMoveCandidate = (move: Move) => {
+  const moveCandidate = findMoveCandidate(move.player.name)
+  if (!moveCandidate) {
+    return state.moveCandidates.push(move)
+  }
+  moveCandidate.direction = move.direction
+  return moveCandidate
+}
+
 export const recordMove = (direction: Direction, playerName: string): State => {
   const player = ensurePlayer(playerName)
 
-  state.moveCandidates.push({
+  ensureMoveCandidate({
     player,
     direction,
   })
