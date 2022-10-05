@@ -1,7 +1,11 @@
 import express from 'express'
 import cors from 'cors'
+import http from 'http'
+// Need to remove "browser" enty from package.json or
+// node-vite gets treated as a browser
+import { WebSocketServer, WebSocket } from 'ws'
 import { recordMove, executeNextMove, getState } from './game'
-import { isDirection } from '../../common'
+import { isDirection, State } from '../../common'
 
 const PORT = 3000
 
@@ -26,8 +30,20 @@ app.post('/:player/:direction', async (req, res) => {
   res.json(state)
 })
 
-app.listen(PORT, () => {
+const broadcast = (state: State) => {
+  wsServer.clients.forEach((client) => {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(JSON.stringify(state))
+    }
+  })
+}
+
+const server = http.createServer(app)
+
+const wsServer = new WebSocketServer({ server })
+
+server.listen(PORT, () => {
   console.log(`Game running on port ${PORT}`)
 
-  executeNextMove()
+  executeNextMove(broadcast)
 })

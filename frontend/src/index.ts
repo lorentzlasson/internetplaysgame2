@@ -22,6 +22,8 @@ const KEY_DIRECTION_MAP: { [key: string]: Direction } = {
 }
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000'
+const BACKEND_WS_URL =
+  import.meta.env.VITE_BACKEND_WS_URL || 'ws://localhost:3000'
 
 const getState = async (): Promise<State> =>
   fetch(BACKEND_URL).then((x) => x.json())
@@ -43,7 +45,7 @@ const handleKeyPress = async ({ key }: KeyboardEvent) => {
 
   const playerName = getPlayerName() || 'player name'
   const state = await recordMove(playerName, direction)
-  console.log(state)
+  render(state)
 }
 
 const prettifyTime = (timeString: string) => {
@@ -75,8 +77,8 @@ const renderMoveHistory = (moveHistory: Move[]) => {
   })
 }
 
-const rerender = async () => {
-  const { entities, score, moveCandidates, moveHistory } = await getState()
+const render = async (state: State) => {
+  const { entities, score, moveCandidates, moveHistory } = state
 
   document.getElementById('score').textContent = score.toString()
 
@@ -93,15 +95,24 @@ const rerender = async () => {
   renderMoveHistory(moveHistory)
 }
 
-const f = async () => {
-  try {
-    await rerender()
-  } catch (error) {
-    console.error(error)
-  }
-  setTimeout(f, 1000)
+const initBoard = async () => {
+  const state = await getState()
+  render(state)
 }
 
-document.addEventListener('keydown', handleKeyPress)
+const initWs = () => {
+  const ws = new WebSocket(BACKEND_WS_URL)
+  ws.onmessage = (event) => {
+    const state: State = JSON.parse(event.data)
+    render(state)
+  }
+}
 
-f()
+const initKeyListener = () => {
+  document.addEventListener('keydown', handleKeyPress)
+}
+
+initBoard().then(() => {
+  initWs()
+  initKeyListener()
+})

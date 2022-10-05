@@ -1,3 +1,2 @@
 - persist state
 - user mgmt
-- push state from server over ws

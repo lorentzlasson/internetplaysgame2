@@ -146,7 +146,7 @@ export const recordMove = (direction: Direction, playerName: string): State => {
   return state
 }
 
-export const executeNextMove = () => {
+export const executeNextMove = (broadcast: (state: State) => void) => {
   const moveCandidates = state.moveCandidates
   console.log(`move candidates: ${moveCandidates.length}`)
 
@@ -190,5 +190,6 @@ export const executeNextMove = () => {
     clearMoveCandiates()
   }
 
-  setTimeout(executeNextMove, MOVE_SELECTION_MILLIS)
+  broadcast(state)
+  setTimeout(() => executeNextMove(broadcast), MOVE_SELECTION_MILLIS)
 }
