@@ -3,6 +3,7 @@ import {
   MoveCandidate,
   Move,
   isSamePosition,
+  range,
   POSITIONS,
   Direction,
   DEFAULT_MOVE_SELECTION_MILLIS,
@@ -13,6 +14,7 @@ const ICONS = {
   coin: '🪙',
   avatar: '🏃',
   blank: '⬜',
+  timerBar: '🟩',
 }
 
 const KEY_DIRECTION_MAP: { [key: string]: Direction } = {
@@ -22,9 +24,13 @@ const KEY_DIRECTION_MAP: { [key: string]: Direction } = {
   ArrowRight: 'right',
 }
 
+const MOVE_TIMER_MILLIS_RESOLUTION = 1000 // lower number = greater resolution
+
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000'
 const BACKEND_WS_URL =
   import.meta.env.VITE_BACKEND_WS_URL || 'ws://localhost:3000'
+
+let lastMoveAtMillis: number | null = null
 
 const getState = async (): Promise<State> =>
   fetch(BACKEND_URL).then((x) => x.json())
@@ -46,20 +52,12 @@ const handleKeyPress = async ({ key }: KeyboardEvent) => {
 
   const playerName = getPlayerName() || 'player name'
   const state = await recordMove(playerName, direction)
-  render(state)
+  syncState(state)
 }
 
 const prettifyTime = (timeString: string) => {
   const time = new Date(timeString)
   return time.getHours() + ':' + time.getMinutes() + ':' + time.getSeconds()
-}
-
-const renderMoveTimer = (lastMoveAtString: string) => {
-  const lastMoveAt = new Date(lastMoveAtString).getTime()
-  const now = new Date().getTime()
-  const timePassed = now - lastMoveAt
-  const timeLeft = DEFAULT_MOVE_SELECTION_MILLIS - timePassed
-  document.getElementById('moveTimer').textContent = timeLeft.toString()
 }
 
 const renderMoveCandidates = (moveCandidates: MoveCandidate[]) => {
@@ -86,7 +84,20 @@ const renderMoveHistory = (moveHistory: Move[]) => {
   })
 }
 
-const render = async (state: State) => {
+const renderMoveTimer = (millisLeft: number) => {
+  if (millisLeft < 0) return
+
+  const element = document.getElementById('moveTimer')
+  element.innerHTML = ''
+
+  const barCount = Math.ceil(millisLeft / MOVE_TIMER_MILLIS_RESOLUTION)
+  range(barCount).forEach(() => {
+    const node = document.createTextNode(ICONS.timerBar)
+    element.appendChild(node)
+  })
+}
+
+const syncState = async (state: State) => {
   const { entities, score, moveCandidates, moveHistory, lastMoveAt } = state
 
   document.getElementById('score').textContent = score.toString()
@@ -102,19 +113,29 @@ const render = async (state: State) => {
 
   renderMoveCandidates(moveCandidates)
   renderMoveHistory(moveHistory)
-  renderMoveTimer(lastMoveAt)
+  lastMoveAtMillis = new Date(lastMoveAt).getTime()
+}
+
+const initMoveTimer = () => {
+  setInterval(() => {
+    const now = new Date().getTime()
+    const timePassed = now - lastMoveAtMillis
+    const timeLeft = DEFAULT_MOVE_SELECTION_MILLIS - timePassed
+
+    renderMoveTimer(timeLeft)
+  }, MOVE_TIMER_MILLIS_RESOLUTION)
 }
 
 const initBoard = async () => {
   const state = await getState()
-  render(state)
+  syncState(state)
 }
 
 const initWs = () => {
   const ws = new WebSocket(BACKEND_WS_URL)
   ws.onmessage = (event) => {
     const state: State = JSON.parse(event.data)
-    render(state)
+    syncState(state)
   }
 }
 
@@ -125,4 +146,5 @@ const initKeyListener = () => {
 initBoard().then(() => {
   initWs()
   initKeyListener()
+  initMoveTimer()
 })

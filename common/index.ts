@@ -52,7 +52,7 @@ export type Direction = typeof DIRECTIONS[number]
 
 const cartesian = (...a: any[][]) =>
   a.reduce((a2, b) => a2.flatMap((d) => b.map((e) => [d, e].flat())))
-const range = (max: number) => Array.from(Array(max).keys())
+export const range = (max: number) => Array.from(Array(max).keys())
 
 export const MOVE_MOVEMENT_MAP: {
   [key in Direction]: Movement
