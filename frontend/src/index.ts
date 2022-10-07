@@ -5,6 +5,7 @@ import {
   isSamePosition,
   POSITIONS,
   Direction,
+  DEFAULT_MOVE_SELECTION_MILLIS,
 } from '../../common'
 
 const ICONS = {
@@ -53,6 +54,14 @@ const prettifyTime = (timeString: string) => {
   return time.getHours() + ':' + time.getMinutes() + ':' + time.getSeconds()
 }
 
+const renderMoveTimer = (lastMoveAtString: string) => {
+  const lastMoveAt = new Date(lastMoveAtString).getTime()
+  const now = new Date().getTime()
+  const timePassed = now - lastMoveAt
+  const timeLeft = DEFAULT_MOVE_SELECTION_MILLIS - timePassed
+  document.getElementById('moveTimer').textContent = timeLeft.toString()
+}
+
 const renderMoveCandidates = (moveCandidates: MoveCandidate[]) => {
   const element = document.getElementById('moveCandidates')
   element.innerHTML = ''
@@ -78,7 +87,7 @@ const renderMoveHistory = (moveHistory: Move[]) => {
 }
 
 const render = async (state: State) => {
-  const { entities, score, moveCandidates, moveHistory } = state
+  const { entities, score, moveCandidates, moveHistory, lastMoveAt } = state
 
   document.getElementById('score').textContent = score.toString()
 
@@ -93,6 +102,7 @@ const render = async (state: State) => {
 
   renderMoveCandidates(moveCandidates)
   renderMoveHistory(moveHistory)
+  renderMoveTimer(lastMoveAt)
 }
 
 const initBoard = async () => {

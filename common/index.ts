@@ -41,6 +41,7 @@ export type State = {
   players: Player[]
   moveCandidates: MoveCandidate[]
   moveHistory: Move[]
+  lastMoveAt: string | null
 }
 
 const DIRECTIONS = ['up', 'down', 'left', 'right'] as const

@@ -40,6 +40,7 @@ const state: State = {
   players: [],
   moveCandidates: [],
   moveHistory: [],
+  lastMoveAt: null,
 }
 
 // ---------- READS ----------
@@ -105,6 +106,10 @@ const clearMoveCandiates = () => {
 
 const registerMove = (move: Move) => {
   state.moveHistory.push(move)
+}
+
+const timestampLastMove = () => {
+  state.lastMoveAt = new Date().toJSON()
 }
 
 const createPlayer = (playerName: string) => {
@@ -190,6 +195,7 @@ export const executeNextMove = (broadcast: (state: State) => void) => {
     clearMoveCandiates()
   }
 
+  timestampLastMove()
   broadcast(state)
   setTimeout(() => executeNextMove(broadcast), MOVE_SELECTION_MILLIS)
 }
