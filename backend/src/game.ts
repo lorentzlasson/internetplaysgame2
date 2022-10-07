@@ -166,31 +166,30 @@ export const executeNextMove = (broadcast: (state: State) => void) => {
     const [mX, mY] = MOVE_MOVEMENT_MAP[direction]
     const newPosition: Position = [x + mX, y + mY]
 
-    if (!positionIsAllowed(newPosition)) {
+    if (positionIsAllowed(newPosition)) {
+      avatar.position = newPosition
+
+      registerMove({
+        ...nextMove,
+        time: new Date().toJSON(),
+      })
+
+      if (positionHasEntity(newPosition, isCoin)) {
+        collectCoin()
+      }
+
+      if (positionHasEntity(newPosition, isBomb)) {
+        blowUpBomb()
+      }
+
+      console.log(
+        `player ${player.name} move ${direction} to ${newPosition} was executed`
+      )
+    } else {
       console.log(
         `player ${player.name} move ${direction} to ${newPosition} is not allowed`
       )
-      return state
     }
-
-    avatar.position = newPosition
-
-    registerMove({
-      ...nextMove,
-      time: new Date().toJSON(),
-    })
-
-    if (positionHasEntity(newPosition, isCoin)) {
-      collectCoin()
-    }
-
-    if (positionHasEntity(newPosition, isBomb)) {
-      blowUpBomb()
-    }
-
-    console.log(
-      `player ${player.name} move ${direction} to ${newPosition} was executed`
-    )
 
     clearMoveCandiates()
   }

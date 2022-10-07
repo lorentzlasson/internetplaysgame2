@@ -50,6 +50,13 @@ const runFlow = async () => {
     assertEntityIsNotInPosition(isCoin, [2, 0]),
   ])
 
+  // tries to go out of bounds
+  await recordMoves([
+    ['a', 'up'],
+    ['c', 'up'],
+  ])
+  await waitForMoveExecution()
+
   await recordMoves([
     ['a', 'left'],
     ['c', 'left'],
