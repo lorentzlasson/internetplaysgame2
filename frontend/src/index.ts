@@ -4,8 +4,10 @@ import {
   Move,
   isSamePosition,
   range,
-  POSITIONS,
+  HEIGHT,
+  WIDTH,
   Direction,
+  Entity,
   DEFAULT_MOVE_SELECTION_MILLIS,
 } from '../../common'
 
@@ -60,6 +62,26 @@ const prettifyTime = (timeString: string) => {
   return time.getHours() + ':' + time.getMinutes() + ':' + time.getSeconds()
 }
 
+const renderBoard = (entities: Entity[]) => {
+  const table = document.getElementById('board')
+  table.innerHTML = ''
+
+  range(HEIGHT).forEach((y) => {
+    const tr = document.createElement('tr')
+    table.appendChild(tr)
+    range(WIDTH).forEach((x) => {
+      const entity = entities.find((e) => isSamePosition(e.position, [x, y]))
+      const emoji = entity ? ICONS[entity.__type] : ICONS.blank
+
+      const td = document.createElement('td')
+      const cell = document.createTextNode(emoji)
+
+      tr.appendChild(td)
+      td.appendChild(cell)
+    })
+  })
+}
+
 const renderMoveCandidates = (moveCandidates: MoveCandidate[]) => {
   const element = document.getElementById('moveCandidates')
   element.innerHTML = ''
@@ -97,20 +119,16 @@ const renderMoveTimer = (millisLeft: number) => {
   })
 }
 
-const syncState = async (state: State) => {
-  const { entities, score, moveCandidates, moveHistory, lastMoveAt } = state
-
+const syncState = async ({
+  entities,
+  score,
+  moveCandidates,
+  moveHistory,
+  lastMoveAt,
+}: State) => {
   document.getElementById('score').textContent = score.toString()
 
-  POSITIONS.forEach((position) => {
-    const entity = entities.find((e) => isSamePosition(e.position, position))
-
-    const emoji = entity ? ICONS[entity.__type] : ICONS.blank
-
-    const elementID = position.toString()
-    document.getElementById(elementID).textContent = emoji
-  })
-
+  renderBoard(entities)
   renderMoveCandidates(moveCandidates)
   renderMoveHistory(moveHistory)
   lastMoveAtMillis = new Date(lastMoveAt).getTime()

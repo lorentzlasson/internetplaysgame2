@@ -63,8 +63,8 @@ export const MOVE_MOVEMENT_MAP: {
   right: [1, 0],
 }
 
-const HEIGHT = 3
-const WIDTH = 3
+export const HEIGHT = 3
+export const WIDTH = 3
 
 export const POSITIONS: Position[] = cartesian(range(WIDTH), range(HEIGHT))
 
