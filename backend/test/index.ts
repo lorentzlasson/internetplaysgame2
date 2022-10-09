@@ -5,6 +5,7 @@ import {
   assertScore,
   assertEntityIsNotInPosition,
   assertMoveCount,
+  assertHighscore,
   waitForMoveExecution,
   recordMoves,
   logState,
@@ -87,6 +88,7 @@ const runFlow = async () => {
 
     assertPlayerCount(3),
     assertMoveCount(7),
+    assertHighscore([1, 2, 3]),
   ])
 
   if (process.env.VERBOSE) await logState()

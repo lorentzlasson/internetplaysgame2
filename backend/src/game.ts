@@ -41,6 +41,7 @@ const state: State = {
   moveCandidates: [],
   moveHistory: [],
   lastMoveAt: null,
+  highScore: 0,
 }
 
 // ---------- READS ----------
@@ -90,8 +91,15 @@ const respawn = (entityGuard: (entity: Entity) => boolean) => {
   entity.position = randomAvailablePosition()
 }
 
+const updateHighScore = (score: number) => {
+  if (score > state.highScore) {
+    state.highScore = score
+  }
+}
+
 const collectCoin = () => {
   state.score++
+  updateHighScore(state.score)
   respawn(isCoin)
 }
 

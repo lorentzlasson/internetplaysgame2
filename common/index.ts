@@ -42,6 +42,7 @@ export type State = {
   moveCandidates: MoveCandidate[]
   moveHistory: Move[]
   lastMoveAt: string | null
+  highScore: number
 }
 
 const DIRECTIONS = ['up', 'down', 'left', 'right'] as const

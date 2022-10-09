@@ -122,11 +122,13 @@ const renderMoveTimer = (millisLeft: number) => {
 const syncState = async ({
   entities,
   score,
+  highScore,
   moveCandidates,
   moveHistory,
   lastMoveAt,
 }: State) => {
   document.getElementById('score').textContent = score.toString()
+  document.getElementById('highScore').textContent = highScore.toString()
 
   renderBoard(entities)
   renderMoveCandidates(moveCandidates)

@@ -67,3 +67,9 @@ export const assertMoveCount = async (expectedMoveCount: number) => {
   const count = state.moveHistory.length
   assert.equal(count, expectedMoveCount)
 }
+
+export const assertHighscore = async (expectedHighScores: number[]) => {
+  const { highScore } = await getState()
+  const anyEqual = expectedHighScores.includes(highScore)
+  assert.equal(anyEqual, true)
+}
