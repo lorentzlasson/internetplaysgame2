@@ -1,10 +1,12 @@
 import { strict as assert } from 'node:assert'
 import { Direction, State, Entity, Position } from '../../common'
 import { MOVE_SELECTION_MILLIS } from '../src/game'
+import { config } from 'dotenv'
+config()
 
 type MoveAttempt = [string, Direction]
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000'
+const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:3000'
 
 export const waitForMoveExecution = async () =>
   new Promise((resolve) => setTimeout(resolve, MOVE_SELECTION_MILLIS * 1.5))

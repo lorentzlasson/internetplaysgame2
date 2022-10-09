@@ -1,8 +1,6 @@
 import express from 'express'
 import cors from 'cors'
 import http from 'http'
-// Need to remove "browser" enty from package.json or
-// node-vite gets treated as a browser
 import { WebSocketServer, WebSocket } from 'ws'
 import { recordMove, executeNextMove, getState } from './game'
 import { isDirection, State } from '../../common'

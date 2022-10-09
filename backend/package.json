@@ -1,9 +1,9 @@
 {
   "scripts": {
-    "start": "vite-node src",
-    "dev": "vite-node --watch src",
+    "start": "tsx src",
+    "dev": "tsx watch src",
     "typecheck": "tsc --noEmit",
-    "test": "NODE_NO_WARNINGS=1 vite-node test",
+    "test": "NODE_NO_WARNINGS=1 tsx test",
     "test:smoke": "./test/index.sh"
   },
   "devDependencies": {
@@ -13,11 +13,12 @@
     "@types/node": "^18.7.23",
     "@types/ws": "^8.5.3",
     "node-fetch": "^3.2.10",
-    "typescript": "^4.7.3",
-    "vite-node": "^0.23.4"
+    "tsx": "^3.10.1",
+    "typescript": "^4.7.3"
   },
   "dependencies": {
     "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
     "express": "^4.18.1",
     "ws": "^8.9.0"
   }

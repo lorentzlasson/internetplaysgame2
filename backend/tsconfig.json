@@ -2,8 +2,7 @@
   "extends": "@tsconfig/node18/tsconfig.json",
   "compilerOptions": {
     "module": "es2022",
-    "lib": ["es2022", "dom"],
-    "types": ["vite/client"]
+    "lib": ["es2022", "dom"]
   },
   "include": ["src", "test"],
   "exclude": ["node_modules"]

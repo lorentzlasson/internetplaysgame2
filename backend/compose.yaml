@@ -1,0 +1,12 @@
+services:
+  test-server:
+    build:
+      context: ../
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - MOVE_SELECTION_MILLIS=500 # To speed up test
+    volumes:
+      - ./src:/app/backend/src
+      - ../common:/app/common
