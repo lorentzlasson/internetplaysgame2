@@ -88,14 +88,33 @@ const renderBoard = (entities: Entity[]) => {
 }
 
 const renderMoveCandidates = (moveCandidates: MoveCandidate[]) => {
-  const element = document.getElementById('moveCandidates')
-  element.innerHTML = ''
+  const yourName = getPlayerName()
+
+  const yourMoveEl = document.getElementById('yourMove')
+  yourMoveEl.innerHTML = ''
+
+  const yourMove = moveCandidates.find(
+    ({ player: { name } }) => name === yourName
+  )
+
+  if (yourMove) {
+    const line = 'You want to move ' + yourMove.direction
+    const node = document.createTextNode(line)
+    const div = document.createElement('b')
+    div.appendChild(node)
+    yourMoveEl.appendChild(div)
+  }
+
+  const moveCandidatesEl = document.getElementById('moveCandidates')
+  moveCandidatesEl.innerHTML = ''
+
   moveCandidates.forEach(({ player: { name }, direction }) => {
+    if (name === yourName) return
     const line = name + ' wants to move ' + direction
     const node = document.createTextNode(line)
     const div = document.createElement('div')
     div.appendChild(node)
-    element.appendChild(div)
+    moveCandidatesEl.appendChild(div)
   })
 }
 
