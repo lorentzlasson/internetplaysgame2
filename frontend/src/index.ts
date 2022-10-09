@@ -129,16 +129,23 @@ const renderMoveHistory = (moveHistory: Move[]) => {
   const element = document.getElementById('moveHistory')
   element.innerHTML = ''
   moveHistory.reverse().forEach(({ player: { name }, direction, time }) => {
-    const line =
-      prettifyTime(time) +
-      ' | ' +
-      name +
-      ' moved ' +
-      DIRECTION_EMOJI_MAP[direction]
-    const node = document.createTextNode(line)
-    const div = document.createElement('div')
-    div.appendChild(node)
-    element.appendChild(div)
+    const tr = document.createElement('tr')
+    element.appendChild(tr)
+
+    const tdTime = document.createElement('td')
+    const cellTime = document.createTextNode(prettifyTime(time))
+    tdTime.appendChild(cellTime)
+    tr.appendChild(tdTime)
+
+    const tdPlayer = document.createElement('td')
+    const cellPlayer = document.createTextNode(name)
+    tdPlayer.appendChild(cellPlayer)
+    tr.appendChild(tdPlayer)
+
+    const tdMove = document.createElement('td')
+    const cellMove = document.createTextNode(DIRECTION_EMOJI_MAP[direction])
+    tdMove.appendChild(cellMove)
+    tr.appendChild(tdMove)
   })
 }
 
