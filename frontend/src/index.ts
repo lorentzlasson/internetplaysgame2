@@ -52,7 +52,12 @@ const handleKeyPress = async ({ key }: KeyboardEvent) => {
   const direction = KEY_DIRECTION_MAP[key]
   if (!direction) return
 
-  const playerName = getPlayerName() || 'player name'
+  const playerName = getPlayerName()
+  if (!playerName) {
+    alert('a player name needs to be entered before you can play')
+    return
+  }
+
   const state = await recordMove(playerName, direction)
   syncState(state)
 }
