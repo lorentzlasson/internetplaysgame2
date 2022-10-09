@@ -102,7 +102,7 @@ const renderMoveCandidates = (moveCandidates: MoveCandidate[]) => {
 const renderMoveHistory = (moveHistory: Move[]) => {
   const element = document.getElementById('moveHistory')
   element.innerHTML = ''
-  moveHistory.forEach(({ player: { name }, direction, time }) => {
+  moveHistory.reverse().forEach(({ player: { name }, direction, time }) => {
     const line = prettifyTime(time) + ' | ' + name + ' moved ' + direction
     const node = document.createTextNode(line)
     const div = document.createElement('div')
