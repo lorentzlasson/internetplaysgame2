@@ -8,18 +8,18 @@
     <script type="module" src="src/index.ts"></script>
     <div>
       <table id="board" style="font-size: 100px"></table>
+      <div id="moveHistory"></div>
+    </div>
+    <div>
+      <div id="moveTimer" style="display:flex"></div>
+      <input id="playerName" type="text" value="player name">
       <div style="display:flex">
         Score:<div id="score"></div>
       </div>
       <div style="display:flex">
         Highscore:<div id="highScore"></div>
       </div>
-      <input id="playerName" type="text" value="player name">
-      <div id="moveCandidates"></div>
-    </div>
-    <div>
-      <div id="moveTimer" style="display:flex"></div>
-      <div id="moveHistory"></div>
+      <div id="moveCandidates" style="border-top:solid"></div>
     </div>
   </body>
 </html>
