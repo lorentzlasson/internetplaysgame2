@@ -26,6 +26,13 @@ const KEY_DIRECTION_MAP: { [key: string]: Direction } = {
   ArrowRight: 'right',
 }
 
+const DIRECTION_EMOJI_MAP: { [key in Direction]: string } = {
+  up: '👆',
+  down: '👇',
+  left: '👈',
+  right: '👉',
+}
+
 const MOVE_TIMER_MILLIS_RESOLUTION = 1000 // lower number = greater resolution
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000'
@@ -98,7 +105,7 @@ const renderMoveCandidates = (moveCandidates: MoveCandidate[]) => {
   )
 
   if (yourMove) {
-    const line = 'You want to move ' + yourMove.direction
+    const line = 'You want to move ' + DIRECTION_EMOJI_MAP[yourMove.direction]
     const node = document.createTextNode(line)
     const div = document.createElement('b')
     div.appendChild(node)
@@ -110,7 +117,7 @@ const renderMoveCandidates = (moveCandidates: MoveCandidate[]) => {
 
   moveCandidates.forEach(({ player: { name }, direction }) => {
     if (name === yourName) return
-    const line = name + ' wants to move ' + direction
+    const line = name + ' wants to move ' + DIRECTION_EMOJI_MAP[direction]
     const node = document.createTextNode(line)
     const div = document.createElement('div')
     div.appendChild(node)
@@ -122,7 +129,12 @@ const renderMoveHistory = (moveHistory: Move[]) => {
   const element = document.getElementById('moveHistory')
   element.innerHTML = ''
   moveHistory.reverse().forEach(({ player: { name }, direction, time }) => {
-    const line = prettifyTime(time) + ' | ' + name + ' moved ' + direction
+    const line =
+      prettifyTime(time) +
+      ' | ' +
+      name +
+      ' moved ' +
+      DIRECTION_EMOJI_MAP[direction]
     const node = document.createTextNode(line)
     const div = document.createElement('div')
     div.appendChild(node)
