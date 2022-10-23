@@ -1,15 +1,14 @@
-FROM node:18
+FROM denoland/deno:1.26.2
 
 WORKDIR /app
 
-COPY common ./common
+COPY src .
 
-WORKDIR backend
+RUN deno cache dep.ts
 
-COPY backend/package*.json ./
+CMD deno run \
+      --allow-net \
+      --allow-read \
+      --allow-env \
+      main.ts
 
-RUN npm ci
-
-COPY backend/src ./src
-
-CMD npm start
