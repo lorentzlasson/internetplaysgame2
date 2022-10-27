@@ -108,11 +108,16 @@ const ui = (state: State) => (
                   <button
                     value={direction}
                     type="submit"
-                    style={{ flex: 1 }}
+                    style={{
+                      flex: 1,
+                      padding: 0,
+                      background: "none",
+                      border: "none",
+                      fontSize: "43px",
+                    }}
                     name="direction"
-                    onClick={() => {console.log('click') }}
                   >
-                  {emoji}
+                    {emoji}
                   </button>
                 );
               })}
