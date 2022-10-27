@@ -1,0 +1,4 @@
+services:
+  game:
+    environment:
+      - MOVE_SELECTION_MILLIS=${MOVE_SELECTION_MILLIS} # To speed up test

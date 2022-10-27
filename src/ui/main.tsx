@@ -3,20 +3,13 @@ import { h, renderToString } from "../dep.ts";
 
 import {
   Direction,
+  EMOJI_MAP,
   HEIGHT,
   isSamePosition,
   range,
   State,
   WIDTH,
 } from "../common.ts";
-
-const EMOJI = {
-  bomb: "💣",
-  coin: "🪙",
-  avatar: "🏃",
-  blank: "⬜",
-  timerBar: "🟩",
-};
 
 const DIRECTION_EMOJI_MAP: { [key in Direction]: string } = {
   left: "⬅️",
@@ -45,7 +38,9 @@ const ui = (state: State) => (
                 const entity = state.entities.find((e) =>
                   isSamePosition(e.position, [x, y])
                 );
-                const emoji = entity ? EMOJI[entity.__type] : EMOJI.blank;
+                const emoji = entity
+                  ? EMOJI_MAP[entity.__type]
+                  : EMOJI_MAP.blank;
                 return (
                   <td>
                     {emoji}
@@ -75,10 +70,10 @@ const ui = (state: State) => (
               : ""}
           </div>
           <div style={{ display: "flex" }}>
-            🪙<div>{state.score}</div>
+            🪙<div id="score">{state.score}</div>
           </div>
           <div style={{ display: "flex" }}>
-            🥇<div>{state.highScore}</div>
+            🥇<div id="highScore">{state.highScore}</div>
           </div>
         </div>
 

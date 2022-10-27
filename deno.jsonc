@@ -1,0 +1,8 @@
+{
+  "tasks": {
+    "dev": "deno run --allow-net --allow-read --allow-env --watch src/main.ts",
+    "test": "deno test --allow-net --allow-read --allow-env --allow-run --allow-write --config test/deno.jsonc",
+    // Combining dev + test for convenience
+    "test:smoke": "./test/index.sh"
+  }
+}

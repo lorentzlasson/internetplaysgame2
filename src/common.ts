@@ -64,6 +64,16 @@ export const MOVE_MOVEMENT_MAP: {
   right: [1, 0],
 };
 
+export const EMOJI_MAP = {
+  bomb: "💣",
+  coin: "🪙",
+  avatar: "🏃",
+  blank: "⬜",
+  timerBar: "🟩",
+} as const;
+
+export type Emoji = typeof EMOJI_MAP[keyof typeof EMOJI_MAP];
+
 export const HEIGHT = 3;
 export const WIDTH = 3;
 
