@@ -105,13 +105,15 @@ const ui = (state: State) => (
             >
               {Object.entries(DIRECTION_EMOJI_MAP).map(([direction, emoji]) => {
                 return (
-                  <input
-                    value={emoji}
-                    formAction={direction}
+                  <button
+                    value={direction}
                     type="submit"
                     style={{ flex: 1 }}
+                    name="direction"
+                    onClick={() => {console.log('click') }}
                   >
-                  </input>
+                  {emoji}
+                  </button>
                 );
               })}
             </div>

@@ -21,10 +21,9 @@ await serve(
     }
 
     if (req.method === "POST") {
-      const { pathname } = new URL(req.url);
-      const [, direction] = pathname.split("/");
       const formData = await req.formData();
       const playerName = formData.get("playerName");
+      const direction = formData.get("direction");
       if (playerName) {
         if (isDirection(direction)) {
           recordMove(direction, playerName.toString());
