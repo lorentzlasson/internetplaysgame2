@@ -2,13 +2,10 @@ FROM denoland/deno:1.26.2
 
 WORKDIR /app
 
-COPY src .
+COPY src ./src
+COPY deno.json .
 
-RUN deno cache dep.ts
+RUN deno cache src/dep.ts
 
-CMD deno run \
-      --allow-net \
-      --allow-read \
-      --allow-env \
-      main.ts
+CMD deno task start
 
