@@ -1,3 +1,5 @@
+- reintro smoke test
+- 24h
 - return result type from move execution
 - persist state
 - user mgmt
