@@ -11,6 +11,17 @@ executeNextMove(() => {});
 await serve(
   async (req) => {
     if (req.method === "GET") {
+      const { pathname } = new URL(req.url);
+
+      if (pathname.startsWith("/favicon.ico")) {
+        const file = await Deno.open("./src/ui/gamepad.svg");
+        return new Response(file.readable, {
+          headers: {
+            "content-type": "image/svg+xml",
+          },
+        });
+      }
+
       const state = getState();
       const html = ui(state);
       return new Response(html, {
