@@ -1,5 +1,5 @@
 /** @jsx h */
-import { h, renderToString } from "../dep.ts";
+import { h, renderSSR } from "../dep.ts";
 
 import {
   Direction,
@@ -131,4 +131,4 @@ const ui = (state: State) => (
   </html>
 );
 
-export default (state: State) => renderToString(ui(state));
+export default (state: State) => renderSSR(() => ui(state));
