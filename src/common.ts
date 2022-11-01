@@ -20,7 +20,7 @@ type Bomb = BaseEntity & {
 
 export type Entity = Avatar | Coin | Bomb;
 
-type Player = {
+export type Player = {
   name: string;
 };
 

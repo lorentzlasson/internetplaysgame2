@@ -9,11 +9,13 @@ import {
   Move,
   MOVE_MOVEMENT_MAP,
   MoveCandidate,
+  Player,
   Position,
   positionIsAllowed,
   POSITIONS,
   State,
 } from "./common.ts";
+import { andThen, failure, map, pipe, Result, success } from "./dep.ts";
 
 export const MOVE_SELECTION_MILLIS =
   parseInt(Deno.env.get("MOVE_SELECTION_MILLIS") || "") ||
@@ -159,6 +161,54 @@ export const recordMove = (direction: Direction, playerName: string): State => {
   console.log(`player ${player.name} move ${direction} is added to candidates`);
 
   return state;
+};
+
+type Step1 = { player: Player; position: Position; direction: Direction };
+const maybeGetPosition = (): Result<Step1, string> => {
+  const moveCandidates = state.moveCandidates;
+  // console.log(`move candidates: ${moveCandidates.length}`);
+
+  if (moveCandidates.length !== 0) return failure("no candidates");
+
+  const nextMove = randomMoveCandidate();
+
+  const avatar = findAvatar();
+
+  const { direction, player } = nextMove;
+
+  const [x, y] = avatar.position;
+  const [mX, mY] = MOVE_MOVEMENT_MAP[direction];
+  const newPosition: Position = [x + mX, y + mY];
+
+  return success({
+    player,
+    direction,
+    position: newPosition,
+  });
+};
+
+type Step2 = number;
+const maybeRegisterMove = (x: Step1): Step2 => {
+  const { player, position, direction } = x;
+  const avatar = findAvatar();
+
+  avatar.position = position;
+
+  registerMove({
+    ...{ player },
+    ...{ direction },
+    time: new Date().toJSON(),
+  });
+
+  return 10;
+};
+
+const f = pipe(maybeGetPosition, map(maybeRegisterMove));
+
+const f2 = () => {
+  const x = maybeGetPosition();
+  const a = map(maybeRegisterMove);
+  const y = a(x);
 };
 
 export const executeNextMove = (broadcast: (state: State) => void) => {
