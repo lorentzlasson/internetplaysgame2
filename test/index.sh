@@ -21,5 +21,5 @@ if [ -n "$DEBUG" ]; then
   docker compose logs $SERVICE
 fi
 
-echo "# KILL NODE SERVER"
+echo "# KILL GAME SERVER"
 docker compose rm --stop --force $SERVICE 2> /dev/null
