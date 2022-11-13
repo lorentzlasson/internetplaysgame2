@@ -55,5 +55,5 @@ await serve(
 
     return new Response(null, { status: 405 });
   },
-  { port: PORT },
+  { port: PORT }
 );

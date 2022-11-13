@@ -1,0 +1,14 @@
+[schema]
+filename = "src/**/*.sql"
+
+[migrations]
+filename = "migrations/*.sql"
+
+[database]
+host = "db"
+user = "postgres"
+dbname = "postgres"
+
+[migra]
+safe = false
+privileges = false
