@@ -6,3 +6,33 @@ services:
     volumes:
       - ./src:/app/src
       - ./deno.jsonc:/app/deno.jsonc
+
+  db:
+    image: postgres:15
+    command: ["postgres", "-c", "log_statement=all"]
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+
+  migration_generate:
+    build: db/migration_generate
+    user: "${UID_GID}"
+    environment:
+      NAME: ${NAME}
+    profiles:
+      - tooling
+    volumes:
+      - ./db/migration_generate/tusker.toml:/app/tusker.toml
+      - ./db/migration_generate/run.sh:/app/run.sh
+      - ./db/migrations:/app/migrations
+      - ./db/src/:/app/src
+
+  migration_run:
+    build: db/migration_run
+    profiles:
+      - tooling
+    volumes:
+      - ./db/migration_run/refinery.toml:/app/refinery.toml
+      - ./db/migration_run/run.sh:/app/run.sh
+      - ./db/migrations:/app/migrations
