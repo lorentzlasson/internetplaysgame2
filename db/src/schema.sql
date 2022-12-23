@@ -1,10 +1,73 @@
-create table foo (
-  id integer
+create domain entity_type as text check(value in (
+  'avatar',
+  'coin',
+  'bomb'
+));
+
+create domain direction as text check(value in (
+  'up',
+  'down',
+  'left',
+  'right'
+));
+
+create domain positive_number as integer not null check (
+  value >= 0
 );
 
-create table bar (
-  id integer,
-  a text,
-  b text
+create domain width as integer not null check (
+  value >= 0 and value <= 2
 );
 
+create domain height as integer not null check (
+  value >= 0 and value <= 2
+);
+
+create domain movement_range as integer not null check (
+  value >= -1 and value <= 1
+);
+
+create type position as (
+  width width,
+  height height
+);
+
+create type movement as (
+  x movement_range,
+  y movement_range
+);
+
+create table game (
+  id serial primary key,
+  score positive_number not null default 0,
+  last_move_at timestamptz,
+  high_score positive_number not null default 0 check (high_score >= score)
+);
+
+create table player (
+  id serial primary key,
+  game_id integer not null references game,
+  name text not null
+);
+
+create table entity (
+  id serial primary key,
+  game_id integer not null references game,
+  type entity_type not null,
+  position "position" not null
+);
+
+create table move_candiate (
+  id serial primary key,
+  game_id integer not null references game,
+  direction direction not null,
+  player player not null
+);
+
+create table move (
+  id serial primary key,
+  game_id integer not null references game,
+  direction direction not null,
+  player player not null,
+  time timestamptz not null default now()
+);
