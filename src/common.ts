@@ -29,7 +29,7 @@ export type MoveCandidate = {
   player: Player;
 };
 
-export type Move = MoveCandidate & {
+export type Move = {
   direction: Direction;
   player: Player;
   time: string;
