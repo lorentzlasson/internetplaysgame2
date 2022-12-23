@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ -z $NAME ]; then
+if [ -z "$NAME" ]; then
   echo "NAME missing"
   exit
 fi
@@ -15,4 +15,4 @@ echo $?
 
 # TODO abort on syntax error
 
-tusker diff > migrations/U$(date +%s)__$NAME.sql
+tusker diff > migrations/U"$(date +%s)__$NAME".sql
