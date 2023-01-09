@@ -7,15 +7,15 @@ type BaseEntity = {
 };
 
 type Avatar = BaseEntity & {
-  __type: "avatar";
+  __type: 'avatar';
 };
 
 type Coin = BaseEntity & {
-  __type: "coin";
+  __type: 'coin';
 };
 
 type Bomb = BaseEntity & {
-  __type: "bomb";
+  __type: 'bomb';
 };
 
 export type Entity = Avatar | Coin | Bomb;
@@ -45,7 +45,7 @@ export type State = {
   highScore: number;
 };
 
-const DIRECTIONS = ["up", "down", "left", "right"] as const;
+const DIRECTIONS = ['up', 'down', 'left', 'right'] as const;
 
 export type Direction = typeof DIRECTIONS[number];
 
@@ -65,11 +65,11 @@ export const MOVE_MOVEMENT_MAP: {
 };
 
 export const EMOJI_MAP = {
-  bomb: "💣",
-  coin: "🪙",
-  avatar: "🏃",
-  blank: "⬜",
-  timerBar: "🟩",
+  bomb: '💣',
+  coin: '🪙',
+  avatar: '🏃',
+  blank: '⬜',
+  timerBar: '🟩',
 } as const;
 
 export type Emoji = typeof EMOJI_MAP[keyof typeof EMOJI_MAP];
@@ -87,13 +87,13 @@ export const isDirection = (token: any): token is Direction =>
   DIRECTIONS.includes(token);
 
 export const isCoin = (entity: Entity): entity is Coin =>
-  entity.__type === "coin";
+  entity.__type === 'coin';
 
 export const isAvatar = (entity: Entity): entity is Avatar =>
-  entity.__type === "avatar";
+  entity.__type === 'avatar';
 
 export const isBomb = (entity: Entity): entity is Bomb =>
-  entity.__type === "bomb";
+  entity.__type === 'bomb';
 
 export const positionIsAllowed = ([x, y]: Position): boolean =>
   x >= 0 && x < WIDTH && y >= 0 && y < HEIGHT;

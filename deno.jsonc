@@ -7,5 +7,10 @@
     "migration:generate": "UID_GID=\"$(id -u):$(id -g)\" docker compose run --rm migration_generate",
     "migration:run": "docker compose run --rm migration_run",
     "dbtypes:generate": "UID_GID=\"$(id -u):$(id -g)\" docker compose run --rm dbtypes_generate"
+  },
+  "fmt": {
+    "options": {
+      "singleQuote": true
+    }
   }
 }

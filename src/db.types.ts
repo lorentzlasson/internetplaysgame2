@@ -1,7 +1,7 @@
 import {
   ColumnType,
   RawBuilder,
-} from "https://cdn.jsdelivr.net/npm/kysely/dist/esm/index.js";
+} from 'https://cdn.jsdelivr.net/npm/kysely/dist/esm/index.js';
 
 export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
   ? ColumnType<S, I | undefined, U>

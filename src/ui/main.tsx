@@ -1,5 +1,5 @@
 /** @jsx h */
-import { h, renderSSR } from "../dep.ts";
+import { h, renderSSR } from '../dep.ts';
 
 import {
   Direction,
@@ -9,29 +9,29 @@ import {
   range,
   State,
   WIDTH,
-} from "../common.ts";
+} from '../common.ts';
 
 const DIRECTION_EMOJI_MAP: { [key in Direction]: string } = {
-  left: "⬅️",
-  down: "⬇️",
-  up: "⬆️",
-  right: "➡️",
+  left: '⬅️',
+  down: '⬇️',
+  up: '⬆️',
+  right: '➡️',
 };
 
 const prettifyTime = (timeString: string) => {
   const time = new Date(timeString);
-  return time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds();
+  return time.getHours() + ':' + time.getMinutes() + ':' + time.getSeconds();
 };
 
 const ui = (state: State) => (
   <html>
     <head>
       <title>Internet Plays Game</title>
-      <meta charSet="UTF-8"></meta>
+      <meta charSet='UTF-8'></meta>
     </head>
-    <body style={{ display: "flex", overflow: "hidden" }}>
+    <body style={{ display: 'flex', overflow: 'hidden' }}>
       <div>
-        <table style={{ fontSize: "100px" }}>
+        <table style={{ fontSize: '100px' }}>
           {range(HEIGHT).map((y) => (
             <tr>
               {range(WIDTH).map((x) => {
@@ -63,31 +63,31 @@ const ui = (state: State) => (
         </table>
       </div>
       <div>
-        <div style={{ fontSize: "20px" }}>
+        <div style={{ fontSize: '20px' }}>
           <div>
             {state.lastMoveAt
               ? `Last move at ${prettifyTime(state.lastMoveAt)}`
-              : ""}
+              : ''}
           </div>
-          <div style={{ display: "flex" }}>
-            🪙<div id="score">{state.score}</div>
+          <div style={{ display: 'flex' }}>
+            🪙<div id='score'>{state.score}</div>
           </div>
-          <div style={{ display: "flex" }}>
-            🥇<div id="highScore">{state.highScore}</div>
+          <div style={{ display: 'flex' }}>
+            🥇<div id='highScore'>{state.highScore}</div>
           </div>
         </div>
 
         <div
           style={{
-            display: "flex",
+            display: 'flex',
           }}
         >
-          <form method="POST">
+          <form method='POST'>
             <input
-              type="text"
-              placeholder="player name"
-              style={{ fontSize: "inherit" }}
-              name="playerName"
+              type='text'
+              placeholder='player name'
+              style={{ fontSize: 'inherit' }}
+              name='playerName'
               required
               autoFocus
             >
@@ -95,22 +95,22 @@ const ui = (state: State) => (
 
             <div
               style={{
-                display: "flex",
+                display: 'flex',
               }}
             >
               {Object.entries(DIRECTION_EMOJI_MAP).map(([direction, emoji]) => {
                 return (
                   <button
                     value={direction}
-                    type="submit"
+                    type='submit'
                     style={{
                       flex: 1,
                       padding: 0,
-                      background: "none",
-                      border: "none",
-                      fontSize: "43px",
+                      background: 'none',
+                      border: 'none',
+                      fontSize: '43px',
                     }}
-                    name="direction"
+                    name='direction'
                   >
                     {emoji}
                   </button>
@@ -119,7 +119,7 @@ const ui = (state: State) => (
             </div>
           </form>
         </div>
-        <div style={{ borderTop: "solid" }}>
+        <div style={{ borderTop: 'solid' }}>
           {state.moveCandidates.map(({ player: { name }, direction }) => (
             <div>
               {`${name} wants to move ${DIRECTION_EMOJI_MAP[direction]}`}

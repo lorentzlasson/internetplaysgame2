@@ -1,8 +1,8 @@
-import { serve } from "./dep.ts";
-import { executeNextMove, getState, recordMove } from "./game.ts";
+import { serve } from './dep.ts';
+import { executeNextMove, getState, recordMove } from './game.ts';
 
-import { isDirection } from "./common.ts";
-import ui from "./ui/main.tsx";
+import { isDirection } from './common.ts';
+import ui from './ui/main.tsx';
 
 const PORT = 8000;
 
@@ -10,14 +10,14 @@ executeNextMove(() => {});
 
 await serve(
   async (req) => {
-    if (req.method === "GET") {
+    if (req.method === 'GET') {
       const { pathname } = new URL(req.url);
 
-      if (pathname.startsWith("/favicon.ico")) {
-        const file = await Deno.open("./src/ui/gamepad.svg");
+      if (pathname.startsWith('/favicon.ico')) {
+        const file = await Deno.open('./src/ui/gamepad.svg');
         return new Response(file.readable, {
           headers: {
-            "content-type": "image/svg+xml",
+            'content-type': 'image/svg+xml',
           },
         });
       }
@@ -26,15 +26,15 @@ await serve(
       const html = ui(state);
       return new Response(html, {
         headers: {
-          "content-type": "text/html",
+          'content-type': 'text/html',
         },
       });
     }
 
-    if (req.method === "POST") {
+    if (req.method === 'POST') {
       const formData = await req.formData();
-      const playerName = formData.get("playerName");
-      const direction = formData.get("direction");
+      const playerName = formData.get('playerName');
+      const direction = formData.get('direction');
       if (playerName) {
         if (isDirection(direction)) {
           recordMove(direction, playerName.toString());
@@ -44,7 +44,7 @@ await serve(
 
           return new Response(html, {
             headers: {
-              "content-type": "text/html",
+              'content-type': 'text/html',
             },
           });
         }

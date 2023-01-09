@@ -1,8 +1,8 @@
-import { buildFor } from "./dep.ts";
-import gameNavigation, { waitForMoveExecution } from "./gameNavigation.ts";
+import { buildFor } from './dep.ts';
+import gameNavigation, { waitForMoveExecution } from './gameNavigation.ts';
 
-Deno.test("smoke", async () => {
-  const { browser, page } = await buildFor("chrome");
+Deno.test('smoke', async () => {
+  const { browser, page } = await buildFor('chrome');
   const {
     loadPage,
     recordMoves,
@@ -16,33 +16,33 @@ Deno.test("smoke", async () => {
 
   // Verify initial state
   await Promise.all([
-    assertEntityIsInPosition("🏃", [0, 2]),
-    assertEntityIsInPosition("🪙", [2, 0]),
-    assertEntityIsInPosition("💣", [0, 1]),
+    assertEntityIsInPosition('🏃', [0, 2]),
+    assertEntityIsInPosition('🪙', [2, 0]),
+    assertEntityIsInPosition('💣', [0, 1]),
     assertScore(0),
   ]);
 
   await recordMoves([
-    { direction: "right", name: "alice" },
-    { direction: "right", name: "bob" },
+    { direction: 'right', name: 'alice' },
+    { direction: 'right', name: 'bob' },
   ]);
   await waitForMoveExecution();
 
   await recordMoves([
-    { direction: "right", name: "alice" },
-    { direction: "right", name: "bob" },
+    { direction: 'right', name: 'alice' },
+    { direction: 'right', name: 'bob' },
   ]);
   await waitForMoveExecution();
 
   await recordMoves([
-    { direction: "up", name: "alice" },
-    { direction: "up", name: "bob" },
+    { direction: 'up', name: 'alice' },
+    { direction: 'up', name: 'bob' },
   ]);
   await waitForMoveExecution();
 
   await recordMoves([
-    { direction: "up", name: "alice" },
-    { direction: "up", name: "bob" },
+    { direction: 'up', name: 'alice' },
+    { direction: 'up', name: 'bob' },
   ]);
   await waitForMoveExecution();
 
@@ -51,31 +51,31 @@ Deno.test("smoke", async () => {
     // Coin is collected
     assertScore(1),
     // Coin has respawned in new location location
-    assertEntityIsNotInPosition("🪙", [2, 0]),
+    assertEntityIsNotInPosition('🪙', [2, 0]),
   ]);
 
   // tries to go out of bounds
   await recordMoves([
-    { direction: "up", name: "alice" },
-    { direction: "up", name: "chad" },
+    { direction: 'up', name: 'alice' },
+    { direction: 'up', name: 'chad' },
   ]);
   await waitForMoveExecution();
 
   await recordMoves([
-    { direction: "left", name: "alice" },
-    { direction: "left", name: "chad" },
+    { direction: 'left', name: 'alice' },
+    { direction: 'left', name: 'chad' },
   ]);
   await waitForMoveExecution();
 
   await recordMoves([
-    { direction: "down", name: "alice" },
-    { direction: "down", name: "chad" },
+    { direction: 'down', name: 'alice' },
+    { direction: 'down', name: 'chad' },
   ]);
   await waitForMoveExecution();
 
   await recordMoves([
-    { direction: "left", name: "alice" },
-    { direction: "left", name: "chad" },
+    { direction: 'left', name: 'alice' },
+    { direction: 'left', name: 'chad' },
   ]);
   await waitForMoveExecution();
 
@@ -86,9 +86,9 @@ Deno.test("smoke", async () => {
     assertScore(0),
 
     // Avatar is in position where bomb was previously
-    assertEntityIsInPosition("🏃", [0, 1]),
+    assertEntityIsInPosition('🏃', [0, 1]),
     // Bomb has respawned in new location location
-    assertEntityIsNotInPosition("💣", [0, 1]),
+    assertEntityIsNotInPosition('💣', [0, 1]),
 
     // High score can vary between 1 and 3 due to randomness
     assertHighScoreWithin([1, 2, 3]),
@@ -98,7 +98,7 @@ Deno.test("smoke", async () => {
     assertHistoryCount(7),
   ]);
 
-  if (Deno.env.get("DEBUG")) await page.takeScreenshot("./test/screenshot");
+  if (Deno.env.get('DEBUG')) await page.takeScreenshot('./test/screenshot');
 
   await browser.close();
 });

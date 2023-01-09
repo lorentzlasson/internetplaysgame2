@@ -13,10 +13,10 @@ import {
   positionIsAllowed,
   POSITIONS,
   State,
-} from "./common.ts";
+} from './common.ts';
 
 export const MOVE_SELECTION_MILLIS =
-  parseInt(Deno.env.get("MOVE_SELECTION_MILLIS") || "") ||
+  parseInt(Deno.env.get('MOVE_SELECTION_MILLIS') || '') ||
   DEFAULT_MOVE_SELECTION_MILLIS;
 
 // ---------- STATE ----------
@@ -25,15 +25,15 @@ const state: State = {
   score: 0,
   entities: [
     {
-      __type: "avatar",
+      __type: 'avatar',
       position: [0, 2],
     },
     {
-      __type: "coin",
+      __type: 'coin',
       position: [2, 0],
     },
     {
-      __type: "bomb",
+      __type: 'bomb',
       position: [0, 1],
     },
   ],
@@ -54,7 +54,7 @@ const findMoveCandidate = (playerName: string) =>
 
 const findAvatar = () => {
   const avatar = state.entities.find(isAvatar);
-  if (!avatar) throw new Error("avatar not found");
+  if (!avatar) throw new Error('avatar not found');
   return avatar;
 };
 
@@ -89,7 +89,7 @@ export const getState = () => state;
 
 const respawn = (entityGuard: (entity: Entity) => boolean) => {
   const entity = state.entities.find(entityGuard);
-  if (!entity) throw new Error("entity not found");
+  if (!entity) throw new Error('entity not found');
   entity.position = randomAvailablePosition();
 };
 
