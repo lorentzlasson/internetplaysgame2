@@ -1,4 +1,4 @@
-import { buildFor } from './dep.ts';
+import { buildFor } from 'sinco';
 import gameNavigation, { waitForMoveExecution } from './gameNavigation.ts';
 
 Deno.test('smoke', async () => {

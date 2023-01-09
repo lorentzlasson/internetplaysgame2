@@ -1,9 +1,6 @@
-import {
-  assertArrayIncludes,
-  assertEquals,
-  assertNotEquals,
-  Page,
-} from './dep.ts';
+import { assertArrayIncludes, assertEquals, assertNotEquals } from 'asserts';
+
+import { Page } from 'sincoPage';
 import { MOVE_SELECTION_MILLIS } from '../src/game.ts';
 import { Direction, Emoji, Position } from '../src/common.ts';
 

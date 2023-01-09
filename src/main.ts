@@ -1,4 +1,4 @@
-import { serve } from './dep.ts';
+import { serve } from 'http_server';
 import { executeNextMove, getState, recordMove } from './game.ts';
 
 import { isDirection } from './common.ts';

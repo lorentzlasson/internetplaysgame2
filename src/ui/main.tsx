@@ -1,5 +1,5 @@
 /** @jsx h */
-import { h, renderSSR } from '../dep.ts';
+import { h, renderSSR } from 'nano_jsx';
 
 import {
   Direction,
